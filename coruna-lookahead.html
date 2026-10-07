@@ -205,6 +205,8 @@ a.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button.ttl { display: block; font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: default; width: 100%; }
 .ex-head { display: flex; justify-content: space-between; gap: .5rem; align-items: start; }
 .mobile-only { display: none; }
+.to-top { position: fixed; right: calc(1rem + env(safe-area-inset-right, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 10; font: 600 .8rem/1 var(--font-body); color: var(--bg); background: var(--ink); border: 0; border-radius: 999px; padding: .65rem .95rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .18); }
+.to-top:hover { background: var(--accent); }
 .listing-col { min-width: 0; }
 .list-tools { display: flex; justify-content: flex-end; gap: .5rem; margin-bottom: .6rem; }
 .tool-btn { font: 500 .75rem/1 var(--font-body); color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: .4rem .7rem; cursor: pointer; display: inline-flex; gap: .35rem; align-items: center; }
@@ -319,6 +321,8 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
       </details>
     </aside>
   </div>
+
+  <button type="button" class="to-top" id="to-top" hidden aria-label="Back to the top">↑ Top</button>
 
   <footer>
     Compiled from venue and city listings: Orquesta Sinfónica de Galicia, Amigos de la Ópera, Teatro Rosalía de Castro, Teatro Colón, Palacio de la Ópera, Filmoteca de Galicia, Fundación Barrié, Afundación, Museo de Belas Artes, Fundación Luis Seoane, Bibliotecas Municipais, Librería Moito Conto. Ratings and stars are stored only in this browser.
@@ -1218,6 +1222,15 @@ const sd = document.getElementById("show-dismissed");
 sd.addEventListener("change", () => { showDismissed = sd.checked; render(); });
 initData();
 initFeedback();
+const toTop = document.getElementById("to-top");
+const syncTop = () => { toTop.hidden = window.scrollY < 700; };
+window.addEventListener("scroll", syncTop, { passive: true });
+syncTop();
+toTop.addEventListener("click", () => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  document.getElementById("tab-" + view)?.focus({ preventScroll: true });
+});
 const os = document.getElementById("only-starred"); os.checked = onlyStarred;
 os.addEventListener("change", () => { onlyStarred = os.checked; store.set("onlyStarred", onlyStarred); render(); });
 const sp = document.getElementById("show-past");
