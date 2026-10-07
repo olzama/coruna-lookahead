@@ -263,7 +263,13 @@ button.ttl { cursor: pointer; }
   .ev.collapsed .thumb,
   .ex.collapsed :is(.ex-img, .fit, .ex-detail) { display: none; }
   .ev.collapsed .fb, .ev.collapsed .links { display: none; }
-  .ev:not(.collapsed).has-img { grid-template-columns: 2.9rem minmax(0, 1fr) 4.25rem auto; }
+  /* Open card on a phone: picture as a banner beside the time, text full width below it. */
+  .ev:not(.collapsed).has-img { grid-template-columns: 2.9rem minmax(0, 1fr) auto; grid-template-areas: "time img ctrls" "body body body"; row-gap: .5rem; }
+  .ev:not(.collapsed).has-img > .time { grid-area: time; }
+  .ev:not(.collapsed).has-img > .thumb { grid-area: img; aspect-ratio: 16 / 9; object-position: 50% 30%; }
+  .ev:not(.collapsed).has-img > .body { grid-area: body; }
+  .ev:not(.collapsed).has-img > .ctrls { grid-area: ctrls; }
+  .ev:not(.collapsed) .note { max-width: none; }
   .ex { padding-block: .6rem; }
   .side { gap: 1.25rem; }
 }
@@ -662,10 +668,17 @@ let typeFilter = new Set();
 try { localStorage.removeItem("cl:typeFilter"); } catch {}
 const typeOk = cat => !typeFilter.size || typeFilter.has(cat);
 /* Collapsed state for events ("ev:id"), exhibitions ("ex:id"), days ("day:YYYY-MM-DD") and weeks ("wk:YYYY-MM-DD").
-   Everything starts expanded; the viewer's choices are remembered in this browser. */
+   On wide screens everything starts expanded; on phones events and exhibitions start collapsed (days and weeks
+   expanded), and the ones opened are remembered instead. The viewer's choices are kept in this browser. */
+const PHONE = window.matchMedia("(max-width: 640px)").matches;
 const collapsed = new Set(store.get("collapsed", []));
-const isCol = k => collapsed.has(k);
-function setCol(k, on) { on ? collapsed.add(k) : collapsed.delete(k); store.set("collapsed", [...collapsed]); }
+const opened = new Set(store.get("opened", []));
+const itemKey = k => PHONE && /^e[vx]:/.test(k);
+const isCol = k => itemKey(k) ? !opened.has(k) : collapsed.has(k);
+function setCol(k, on) {
+  if (itemKey(k)) { on ? opened.delete(k) : opened.add(k); store.set("opened", [...opened]); }
+  else { on ? collapsed.add(k) : collapsed.delete(k); store.set("collapsed", [...collapsed]); }
+}
 function togBtn(key, node, labelOpen, labelClosed) {
   const b = el("button", "tog", "");
   b.type = "button";
@@ -1139,6 +1152,7 @@ function renderExhibits([from, to]) {
     run += e.getFullYear() >= 2030 ? " · permanent" : ` · until ${fmtShort(e)}`;
     if (left <= 30 && opensIn <= 0) run += ` · <span class="closing">closes ${rel(left)}</span>`;
     const item = el("div", "ex " + t + (isCol("ex:" + x.id) ? " collapsed" : ""));
+    item.dataset.key = "ex:" + x.id;
     const head = el("div", "ex-head");
     const xb = el("button", "ttl", esc(x.t));
     xb.type = "button";
@@ -1353,14 +1367,17 @@ sp.addEventListener("change", () => { showPast = sp.checked; render(); });
 const hl = document.getElementById("hide-low"); hl.checked = hideLow;
 hl.addEventListener("change", () => { hideLow = hl.checked; store.set("hideLow", hideLow); render(); });
 document.getElementById("credits").innerHTML = `<details><summary><b>Image credits</b> (${Object.keys(IMAGES).length}, via Wikimedia Commons)</summary>` + Object.values(IMAGES).map(i => i.page ? `<span><a href="${i.page}" target="_blank" rel="noopener">${esc(i.credit)}</a></span>` : `<span>${esc(i.credit)}</span>`).join("") + "</details>";
-document.getElementById("expand-all-btn").addEventListener("click", () => { collapsed.clear(); store.set("collapsed", []); render(); });
+document.getElementById("expand-all-btn").addEventListener("click", () => {
+  if (PHONE) for (const n of document.querySelectorAll("#listing .ev, #exhibits .ex")) opened.add(n.dataset.key || (n.classList.contains("ex") ? "ex:" : "ev:") + n.id.replace(/^e[vx]-/, ""));
+  collapsed.clear(); store.set("collapsed", []); store.set("opened", [...opened]); render();
+});
 document.getElementById("collapse-all-btn").addEventListener("click", () => {
   for (const n of document.querySelectorAll("#listing .ev, #listing .day, #listing .week, #exhibits .ex")) {
     const k = n.dataset.key || (n.classList.contains("ex") ? "ex:" : "ev:") + n.id.replace(/^ev-/, "");
-    if (n.classList.contains("ev")) collapsed.add("ev:" + n.id.replace(/^ev-/, ""));
-    else if (n.dataset.key) collapsed.add(n.dataset.key);
+    if (n.classList.contains("ev")) setCol("ev:" + n.id.replace(/^ev-/, ""), true);
+    else if (n.dataset.key) setCol(n.dataset.key, true);
   }
-  store.set("collapsed", [...collapsed]); render();
+  render();
 });
 renderPrefs();
 render();
