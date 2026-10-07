@@ -48,6 +48,7 @@ Each listing needs its own info page (`src`) and, if ticketed, the exact ticket 
 
 - Set `pick` (1–5) on the event itself: quality, rarity, how much it would be missed.
 - Write a `PROFILE` `fit` note only when there is a real, specific connection to this person, and a `warn` note when there is a known reason for doubt (a touring company with recorded music, for example). No generic praise.
+- Give every highly rated event a picture where a free one exists: search Wikimedia Commons for the performer, author, work or venue (use the browser if the Commons API rate-limits), download a 640px copy into `img/`, add it to `IMAGES` with its licence credit, set the event's `img` field, and publish the file with the page. Event photos from venues and publishers are copyrighted; don't use them.
 - Add to `DEMAND` whatever is likely to sell out, with the reason.
 - Use or extend the categories in `CATS`; add a new type when a real cluster appears.
 - Write each new or changed event with `ArtifactData` (`set` for new, `update` with `if_version` for changes) using the schema the daily routine uses: id, cat, t, who, v, dates [{d, t}], pick, price, src, buy, note, fit, warn, tbc, demand, soldOut, img, updatedAt, source. Keep the local copy in `data/` in sync. Past events may stay; the page hides them.
