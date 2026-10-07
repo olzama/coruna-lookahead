@@ -737,9 +737,9 @@ function raw(cat, pick, id) {
   return w * pick + (w && prof(id).fit ? FIT_BONUS : 0) + (w && v === 1 ? LIKE_BONUS : 0);
 }
 /* Tiers are relative: among everything still ahead (events and exhibitions), the top MUST_SHARE by score are
-   "Don't miss" and the next REC_SHARE "Recommended", so the labels stay rare whatever the interest levels.
+   "Don't miss" (at least MIN_MUST) and the next REC_SHARE "Recommended", so the labels stay rare whatever the interest levels.
    Ties are broken by the editorial rating, then by date. Scores below 3 are "low" (dimmed). */
-const MUST_SHARE = 0.05, REC_SHARE = 0.10;
+const MUST_SHARE = 0.05, REC_SHARE = 0.10, MIN_MUST = 3;
 let RANK_TIER = new Map();
 function computeTiers() {
   const pool = [];
@@ -753,10 +753,12 @@ function computeTiers() {
     if ((weights[xc] ?? 0) && parse(x.to) >= TODAY) pool.push({ id: x.id, s: raw(xc, x.pick, x.id), pick: x.pick, d: parse(x.from) });
   }
   pool.sort((a, b) => b.s - a.s || b.pick - a.pick || a.d - b.d);
-  const nMust = Math.max(1, Math.round(pool.length * MUST_SHARE)), nRec = Math.round(pool.length * (MUST_SHARE + REC_SHARE));
-  RANK_TIER = new Map(pool.filter(p => p.s >= 3).slice(0, nRec).map((p, i) => [p.id, i < nMust ? "must" : "rec"]));
+  const ranked = pool.filter(p => p.s > 0);
+  const nMust = Math.max(MIN_MUST, Math.round(pool.length * MUST_SHARE));
+  const nRec = Math.max(nMust, Math.round(pool.length * (MUST_SHARE + REC_SHARE)));
+  RANK_TIER = new Map(ranked.slice(0, nRec).filter((p, i) => i < nMust || p.s >= 3).map((p, i) => [p.id, i < nMust ? "must" : "rec"]));
 }
-function tier(score, id) { return score < 3 ? "low" : RANK_TIER.get(id) || ""; }
+function tier(score, id) { return RANK_TIER.get(id) || (score < 3 ? "low" : ""); }
 function urgency(daysAway) { return 1 + 0.8 * Math.exp(-daysAway / 6); }
 
 /* ---------- build ---------- */
@@ -1140,8 +1142,10 @@ function renderPicks(list) {
   const box = document.getElementById("picks");
   box.innerHTML = "";
   const n = view === "week" ? 3 : 4;
-  const ranked = list.filter(r => (r.tier === "must" || r.tier === "rec") && r.date >= TODAY)
-    .map(r => ({ r, s: r.score * urgency(diff(TODAY, r.date)) + (stars.has(r.e.id) ? 4 : 0) }))
+  /* Highlighted items first; if the window has fewer than n, the best-scoring others fill the remaining cards. */
+  const boost = { must: 1000, rec: 500 };
+  const ranked = list.filter(r => r.score > 0 && r.date >= TODAY)
+    .map(r => ({ r, s: (boost[r.tier] || 0) + r.score * urgency(diff(TODAY, r.date)) + (stars.has(r.e.id) ? 4 : 0) }))
     .sort((a, b) => b.s - a.s).slice(0, n)
     .sort((a, b) => a.r.date - b.r.date);
   document.querySelector(".picks").hidden = !ranked.length;
