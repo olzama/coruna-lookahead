@@ -13,5 +13,16 @@
  "fit": "A film that grows out of an unfinished Lorca manuscript: literature and cinema at once.",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "javis"
+ "img": "javis",
+ "q": 7,
+ "rare": 0,
+ "people": [
+  "Los Javis",
+  "Penélope Cruz"
+ ],
+ "works": [
+  "Lorca"
+ ],
+ "fitw": 1,
+ "series": "new-release"
 }

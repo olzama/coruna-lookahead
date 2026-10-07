@@ -18,5 +18,16 @@
  "img": "strausswoche",
  "fit": "Strauss's homage to Mozart, written in the language of Tristan.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 8,
+ "rare": 1,
+ "people": [
+  "Roberto González-Monjas"
+ ],
+ "works": [
+  "Richard Strauss",
+  "Mozart"
+ ],
+ "fitw": 1,
+ "series": "osg-season"
 }

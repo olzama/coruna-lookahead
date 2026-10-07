@@ -11,5 +11,12 @@
  "img": "seoane",
  "fit": "Galicia's great exiled painter, who spent decades in Buenos Aires: the émigré life you have read in Berberova, Herzen and Nabokov.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 7,
+ "rare": 1,
+ "people": [],
+ "works": [
+  "Luis Seoane"
+ ],
+ "fitw": 1
 }

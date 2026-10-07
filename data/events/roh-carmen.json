@@ -18,5 +18,15 @@
  "fit": "A theatre-driven Carmen from one of today's leading opera directors: drama first.",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "c-f3b01ea923"
+ "img": "c-f3b01ea923",
+ "q": 7,
+ "rare": 0,
+ "people": [
+  "Royal Opera"
+ ],
+ "works": [
+  "Bizet"
+ ],
+ "fitw": 1,
+ "series": "roh-live"
 }

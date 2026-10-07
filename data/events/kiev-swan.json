@@ -18,5 +18,13 @@
  "warn": "Touring company. You have written about corps de ballet that stomp; expect that here.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "c-7f542b31be"
+ "img": "c-7f542b31be",
+ "q": 1,
+ "rare": 0,
+ "people": [
+  "Ballet de Kiev"
+ ],
+ "works": [
+  "Tchaikovsky"
+ ]
 }

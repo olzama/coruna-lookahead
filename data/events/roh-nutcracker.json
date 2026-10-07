@@ -17,5 +17,14 @@
  "tbc": "Start time on the cinema page",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "c-01c0ceabbd"
+ "img": "c-01c0ceabbd",
+ "q": 6,
+ "rare": 0,
+ "people": [
+  "Royal Ballet"
+ ],
+ "works": [
+  "Tchaikovsky"
+ ],
+ "series": "roh-live"
 }

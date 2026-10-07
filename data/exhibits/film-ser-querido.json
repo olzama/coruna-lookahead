@@ -12,5 +12,13 @@
  "tbc": "End of run not announced",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "sorogoyen"
+ "img": "sorogoyen",
+ "q": 8,
+ "rare": 0,
+ "people": [
+  "Rodrigo Sorogoyen",
+  "Javier Bardem"
+ ],
+ "works": [],
+ "series": "new-release"
 }

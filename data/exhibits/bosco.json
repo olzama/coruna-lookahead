@@ -11,5 +11,14 @@
  "img": "bosco",
  "fit": "You found the Dutch and Flemish rooms at the Met overwhelming. This is that school.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 10,
+ "rare": 2,
+ "people": [],
+ "works": [
+  "Hieronymus Bosch",
+  "Pieter Bruegel"
+ ],
+ "fitw": 2,
+ "series": "barrie"
 }

@@ -17,5 +17,15 @@
  "fit": "A primer the day before the Tosca you marked as liked.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "c-be75626ca9"
+ "img": "c-be75626ca9",
+ "q": 6,
+ "rare": 1,
+ "people": [
+  "Irene de Juan Bernabéu"
+ ],
+ "works": [
+  "Puccini"
+ ],
+ "fitw": 1,
+ "series": "opera-afundacion"
 }

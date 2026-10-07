@@ -16,5 +16,12 @@
  "note": "New novel from the author of Ordesa.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "vilas"
+ "img": "vilas",
+ "q": 7,
+ "rare": 0,
+ "people": [
+  "Manuel Vilas"
+ ],
+ "works": [],
+ "series": "moito-conto"
 }

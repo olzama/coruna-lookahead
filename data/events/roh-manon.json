@@ -18,5 +18,16 @@
  "fit": "Dance with a live orchestra, which you prefer to touring companies on tape.",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "c-df8e4937b9"
+ "img": "c-df8e4937b9",
+ "q": 8,
+ "rare": 1,
+ "people": [
+  "Royal Ballet"
+ ],
+ "works": [
+  "Massenet",
+  "Kenneth MacMillan"
+ ],
+ "fitw": 1,
+ "series": "roh-live"
 }

@@ -17,5 +17,12 @@
  "note": "",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "mizoguchi"
+ "img": "mizoguchi",
+ "q": 9,
+ "rare": 2,
+ "people": [],
+ "works": [
+  "Kenji Mizoguchi"
+ ],
+ "series": "colon-cinema"
 }

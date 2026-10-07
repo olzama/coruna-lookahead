@@ -18,5 +18,15 @@
  "fit": "Ette is a literary scholar of travel writing who writes about literatures and lives that move between languages.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "c-4661da2765"
+ "img": "c-4661da2765",
+ "q": 7,
+ "rare": 2,
+ "people": [
+  "Ottmar Ette"
+ ],
+ "works": [
+  "Alexander von Humboldt"
+ ],
+ "fitw": 2,
+ "series": "muncyt-humboldt"
 }

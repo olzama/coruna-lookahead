@@ -17,5 +17,14 @@
  "img": "caamano",
  "fit": "A key Galician-language novelist. Her Circe retells the Odyssey through Penelope and Circe, myth read from the women's side.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 6,
+ "rare": 1,
+ "people": [
+  "Marina Oural"
+ ],
+ "works": [
+  "Begoña Caamaño"
+ ],
+ "fitw": 1
 }

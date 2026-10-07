@@ -17,5 +17,12 @@
  "note": "",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "bergman"
+ "img": "bergman",
+ "q": 8,
+ "rare": 1,
+ "people": [],
+ "works": [
+  "Ingmar Bergman"
+ ],
+ "series": "colon-cinema"
 }

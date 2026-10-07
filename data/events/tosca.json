@@ -22,5 +22,16 @@
  "img": "tosca",
  "fit": "You judge opera as drama first and count tears as the test; La Bohème did it in Seattle. Carlos Álvarez is one of the great singing actors, and Scarpia is his signature role.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 10,
+ "rare": 2,
+ "people": [
+  "Miren Urbieta-Vega",
+  "Carlos Álvarez"
+ ],
+ "works": [
+  "Puccini"
+ ],
+ "fitw": 2,
+ "series": "amigos-opera"
 }

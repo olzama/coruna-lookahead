@@ -24,5 +24,14 @@
  "note": "First half: Bal y Gay, Rosa García Ascot, Rodolfo Halffter.",
  "img": "falla",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 8,
+ "rare": 2,
+ "people": [
+  "José Trigueros"
+ ],
+ "works": [
+  "Manuel de Falla"
+ ],
+ "series": "osg-season"
 }

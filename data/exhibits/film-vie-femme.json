@@ -12,5 +12,12 @@
  "tbc": "End of run not announced; check for subtitled (VOSE) sessions",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "drucker"
+ "img": "drucker",
+ "q": 6,
+ "rare": 0,
+ "people": [
+  "Léa Drucker"
+ ],
+ "works": [],
+ "series": "new-release"
 }

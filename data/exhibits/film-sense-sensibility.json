@@ -12,5 +12,14 @@
  "tbc": "End of run not announced",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "c-c9151383d8"
+ "img": "c-c9151383d8",
+ "q": 4,
+ "rare": 0,
+ "people": [
+  "Daisy Edgar-Jones"
+ ],
+ "works": [
+  "Jane Austen"
+ ],
+ "series": "new-release"
 }

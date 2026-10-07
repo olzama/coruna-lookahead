@@ -236,7 +236,8 @@ button.ttl { cursor: pointer; }
 .fy { display: inline; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
 .ev:not(.collapsed) .fy { display: none; }
 .ev.collapsed :is(.note, .fit, .warn) { display: none; }
-.ev.collapsed :is(.meta, .fb) { display: none; }
+.ev.collapsed :is(.meta, .fb, .why) { display: none; }
+.ev .why { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); margin-top: .3rem; }
 .pick-ph { aspect-ratio: 3 / 2; margin-bottom: .5rem; background: var(--accent-soft); color: var(--accent); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .25rem; padding: 0 !important; }
 .pick-ph .ph-day { font-family: var(--font-display); font-size: 3.2rem; line-height: 1; }
 .pick-ph .ph-sub { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
@@ -309,7 +310,7 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
   </section>
 
   <section class="picks" aria-labelledby="picks-h">
-    <h2 id="picks-h">Don't miss</h2>
+    <h2 id="picks-h">Highlights</h2>
     <div class="pick-list" id="picks"></div>
   </section>
 
@@ -328,7 +329,8 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
       </section>
       <details class="legend" id="legend">
         <summary><h2>How it ranks</h2></summary>
-        <p>Each listing has an editorial rating from 1 to 5. That rating is multiplied by your interest in its category, and listings with a <b>For you</b> note get a bonus. <b>Don't miss</b> and <b>Recommended</b> come from that score; the top strip also favours what is soonest.</p>
+        <p>Each listing gets a score from its editorial rating (1–10, for quality and how much it would be missed), your interest in its category, how rare it is, its <b>For you</b> connection, your likes and visits (which also lift listings with the same people, works or series, while "Not for me" lowers them), and timing (selling fast, last weeks of an exhibition). Each listing's <b>Why</b> line shows what counted.</p>
+        <p>The top 5% of everything ahead (at least three) are <b>Don't miss</b> and the next 10% <b>Recommended</b>. <b>Highlights</b> picks the strongest of these in the current view, favouring what is soonest.</p>
         <p><b>For you</b> notes draw on your journal (opera as drama, Wagner and Strauss, Russian repertoire, émigré memoirs, Flemish painting, a feminist reading of books) and on what you read and care about now: contemporary fiction, Galicia and its language and culture, languages and linguistics, AI, chess, and animals.</p>
         <p>Items marked <span class="tbc">to confirm</span> have incomplete or conflicting details in the sources. Check the venue before buying.</p>
       </details>
@@ -506,9 +508,8 @@ const EXHIBITS = [
 ];
 
 /* ---------- profile layer ----------
-   fit: why this listing connects to the reader's documented tastes (adds FIT_BONUS to its score).
+   fit: why this listing connects to the reader's documented tastes (raises its score; see scoring).
    warn: a reason to temper expectations. img: key into IMAGES. */
-const FIT_BONUS = 3;
 const PROFILE = {
   "tosca": { img: "tosca", fit: "You judge opera as drama first and count tears as the test; La Bohème did it in Seattle. Carlos Álvarez is one of the great singing actors, and Scarpia is his signature role." },
   "osg-reiss": { img: "reiss", fit: "Late Strauss, the direct heir of the Tristan harmony you have written about at length." },
@@ -732,17 +733,63 @@ function windowFor(v) {
 
 /* ---------- scoring ---------- */
 const exCat = "art";
-function raw(cat, pick, id) {
-  const w = weights[cat] ?? 0, v = voteOf(id);
-  if (v === -1) return 0;
-  return w * pick + (w && prof(id).fit ? FIT_BONUS : 0) + (w && v === 1 ? LIKE_BONUS : 0);
+/* ---------- scoring ----------
+   score = quality (q, 1–10; else the 1–5 pick doubled) scaled by interest level (Some 0.6, Like 0.8, Love 1.0)
+         + rarity (rare: 1 uncommon, 2 rare) × 1.5
+         + For you connection × 1.5 × strength (fitw 1–2)
+         + 3 if liked; likes and "I went" carry over to listings sharing people/works (+1.5) or a series (+0.75), up to +3;
+           "Not for me" carries over through shared performers (−2) or series (−1), down to −4
+         + 1 likely to sell out, + 1 exhibition in its last three weeks
+         − 0.5 details unconfirmed, − 1 needs a trip.
+   "Not for me" on the listing itself, or interest Off, gives 0. Each score keeps the reasons shown on the listing. */
+const ITEMS = new Map();
+const shortT = t => t.length > 30 ? t.slice(0, 28).trim() + "…" : t;
+function affinity(x) {
+  let up = 0, down = 0, upWhy = "", strongUp = false;
+  const share = (a, b) => a.some(n => b.includes(n));
+  for (const [id, f] of FB.map) {
+    const y = ITEMS.get(id);
+    if (!y || id === x.id) continue;
+    if (f.vote === 1 || f.went) {
+      const strong = share([...(x.people || []), ...(x.works || [])], [...(y.people || []), ...(y.works || [])]);
+      const g = strong ? 1.5 : x.series && x.series === y.series ? 0.75 : 0;
+      if (g) { up += g; if (!upWhy || (strong && !strongUp)) { upWhy = y.t; strongUp = strong; } }
+    } else if (f.vote === -1) {
+      down += share(x.people || [], y.people || []) ? 2 : x.series && x.series === y.series ? 1 : 0;
+    }
+  }
+  return { a: Math.min(up, 3) - Math.min(down, 4), upWhy, down };
 }
+function scoreOf(id, cat) {
+  const x = ITEMS.get(id), level = weights[cat] ?? 0, v = voteOf(id);
+  if (!x || !level || v === -1) return { s: 0, why: [] };
+  const q = x.q ?? (x.pick || 3) * 2, why = [`rated ${q}/10`];
+  let s = q * (0.4 + 0.2 * Math.min(level, 3));
+  const rare = x.rare || 0;
+  s += 1.5 * rare;
+  if (rare) why.push(rare >= 2 ? "rare" : "uncommon");
+  if (prof(id).fit) { s += 1.5 * (x.fitw || 1); why.push("For you"); }
+  if (v === 1) { s += 3; why.push("you liked it"); }
+  const af = affinity(x);
+  s += af.a;
+  if (af.a > 0 && af.upWhy) why.push(`you liked ${shortT(af.upWhy)}`);
+  if (af.down) why.push("like something you passed on");
+  if (DEMAND[id]) { s += 1; why.push("selling fast"); }
+  if (!x.dates && x.to) { const left = diff(TODAY, parse(x.to)); if (left >= 0 && left <= 21) { s += 1; why.push("ends soon"); } }
+  if (x.tbc) s -= 0.5;
+  if (x.far) { s -= 1; why.push("needs a trip"); }
+  return { s: Math.max(0, s), why };
+}
+function raw(cat, pick, id) { return scoreOf(id, cat).s; }
 /* Tiers are relative: among everything still ahead (events and exhibitions), the top MUST_SHARE by score are
    "Don't miss" (at least MIN_MUST) and the next REC_SHARE "Recommended", so the labels stay rare whatever the interest levels.
    Ties are broken by the editorial rating, then by date. Scores below 3 are "low" (dimmed). */
 const MUST_SHARE = 0.05, REC_SHARE = 0.10, MIN_MUST = 3;
 let RANK_TIER = new Map();
 function computeTiers() {
+  ITEMS.clear();
+  for (const x of EVENTS) ITEMS.set(x.id, x);
+  for (const x of EXHIBITS) ITEMS.set(x.id, x);
   const pool = [];
   for (const e of EVENTS) {
     if (!(weights[e.cat] ?? 0)) continue;
@@ -769,8 +816,8 @@ function entries([from, to]) {
     if ((weights[e.cat] ?? 0) === 0) continue;
     const occ = e.dates.map(([d, t]) => ({ d: parse(d), t })).filter(o => o.d >= from && o.d <= to);
     if (!occ.length) continue;
-    const s = raw(e.cat, e.pick, e.id);
-    out.push({ e, date: occ[0].d, time: occ[0].t, also: occ.slice(1), score: s, tier: tier(s, e.id), cat: e.cat });
+    const { s, why } = scoreOf(e.id, e.cat);
+    out.push({ e, date: occ[0].d, time: occ[0].t, also: occ.slice(1), score: s, why, tier: tier(s, e.id), cat: e.cat });
   }
   for (const x of EXHIBITS) {
     const xc = x.cat || exCat;
@@ -847,6 +894,7 @@ function renderEvent(r) {
   if (pf.fit) body.appendChild(el("div", "fit", `<b>For you</b> ${esc(pf.fit)}`));
   if (pf.warn) body.appendChild(el("div", "warn", `<b>Caution</b> ${esc(pf.warn)}`));
   if (DEMAND[e.id]) body.appendChild(el("div", "warn", `<b>Book early</b> ${esc(DEMAND[e.id])}`));
+  if (r.why?.length) body.appendChild(el("div", "why", "Why: " + esc(r.why.join(" · "))));
   const meta = [];
   if (e.soldOut) meta.push('<span class="tbc">Sold out</span>');
   if (r.also.length) meta.push("Also " + r.also.map(o => { const u = buyUrl(e, o.d), lbl = esc(fmtWd(o.d) + (o.t ? " " + o.t : "")); return u && !e.soldOut ? `<a href="${u}" target="_blank" rel="noopener">${lbl}</a>` : lbl; }).join(", "));
@@ -894,7 +942,6 @@ function jumpTo(id) {
 }
 
 /* ---------- feedback (owner only, stored in the artifact's db) ---------- */
-const LIKE_BONUS = 4;
 const FB = { enabled: false, db: null, map: new Map(), alerts: [] };
 const ALERT_STATUS = { on_sale: "On sale now", onsale_soon: "On sale soon", low: "Limited availability", sold_out: "Sold out", announced: "Just announced" };
 let showDismissed = false;
@@ -931,6 +978,11 @@ async function initData() {
     if (snap.empty) return;
     const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     applyDocs(EXHIBITS, docs, false); note(docs); render();
+  }, () => {});
+  /* Pictures added by scans: {src, alt, credit, page, pos} per image key, files published under img/. */
+  db.collection("images").onSnapshot(snap => {
+    for (const d of snap.docs) { const x = d.data(); if (/^img\/[\w.-]+$/.test(x.src || "")) IMAGES[d.id] = x; }
+    renderCredits(); render();
   }, () => {});
 }
 
@@ -1399,7 +1451,8 @@ const sp = document.getElementById("show-past");
 sp.addEventListener("change", () => { showPast = sp.checked; render(); });
 const hl = document.getElementById("hide-low"); hl.checked = hideLow;
 hl.addEventListener("change", () => { hideLow = hl.checked; store.set("hideLow", hideLow); render(); });
-document.getElementById("credits").innerHTML = `<details><summary><b>Image credits</b> (${Object.keys(IMAGES).length}, via Wikimedia Commons)</summary>` + Object.values(IMAGES).map(i => i.page ? `<span><a href="${i.page}" target="_blank" rel="noopener">${esc(i.credit)}</a></span>` : `<span>${esc(i.credit)}</span>`).join("") + "</details>";
+function renderCredits() { document.getElementById("credits").innerHTML = `<details><summary><b>Image credits</b> (${Object.keys(IMAGES).length}, via Wikimedia Commons)</summary>` + Object.values(IMAGES).map(i => i.page ? `<span><a href="${i.page}" target="_blank" rel="noopener">${esc(i.credit)}</a></span>` : `<span>${esc(i.credit)}</span>`).join("") + "</details>"; }
+renderCredits();
 document.getElementById("expand-all-btn").addEventListener("click", () => {
   if (PHONE) for (const n of document.querySelectorAll("#listing .ev, #exhibits .ex")) opened.add(n.dataset.key || (n.classList.contains("ex") ? "ex:" : "ev:") + n.id.replace(/^e[vx]-/, ""));
   collapsed.clear(); store.set("collapsed", []); store.set("opened", [...opened]); render();

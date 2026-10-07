@@ -18,5 +18,17 @@
  "img": "reiss",
  "fit": "Late Strauss, the direct heir of the Tristan harmony you have written about at length.",
  "updatedAt": "2026-10-07T09:00:00Z",
- "source": "refresh"
+ "source": "refresh",
+ "q": 9,
+ "rare": 1,
+ "people": [
+  "Chen Reiss",
+  "Alexander Liebreich"
+ ],
+ "works": [
+  "Richard Strauss",
+  "Mendelssohn"
+ ],
+ "fitw": 2,
+ "series": "osg-season"
 }

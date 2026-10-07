@@ -18,5 +18,13 @@
  "demand": "A small bookshop room. Arrive early or ask the shop to keep a seat.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "tibuleac"
+ "img": "tibuleac",
+ "q": 10,
+ "rare": 2,
+ "people": [
+  "Tatiana Țîbuleac"
+ ],
+ "works": [],
+ "fitw": 2,
+ "series": "moito-conto"
 }

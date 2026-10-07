@@ -24,13 +24,13 @@ only public domain, CC0, CC BY and CC BY-SA raster images of usable size pass.
 
 Assignment, in date order, scores candidates by exactness and subject order,
 penalises reuse (capped by --max-reuse) and the same kind of picture as the
-previous two listings. Winners are saved at 640 px in img/; the result JSON
+previous two listings. Winners are saved at 640 px in img/ (as .jpg, or .png when served so and sips is unavailable); the result JSON
 holds key, kind, method, credit and source page per listing, and lists the
 items with no picture under "none".
 
 Usage: pick-images.py plan.json result.json [--img-dir img] [--max-reuse 2]
 """
-import argparse, hashlib, json, os, re, subprocess, sys, time, unicodedata, urllib.parse
+import argparse, hashlib, json, os, re, shutil, subprocess, sys, time, unicodedata, urllib.parse
 
 COMMONS = "https://commons.wikimedia.org/w/api.php"
 WIKIDATA = "https://www.wikidata.org/w/api.php"
@@ -57,7 +57,7 @@ def fold(s):
     return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
 
 
-IIPROP = {"prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": 800}
+IIPROP = {"prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": 640}
 
 
 def info(pages):
@@ -143,16 +143,23 @@ def main():
             none.append(item["id"]); print(f"none    {item['id']}", file=sys.stderr); continue
         _, c, s, how = best
         key = "c-" + hashlib.sha1(c["title"].encode()).hexdigest()[:10]
-        dest = f"{a.img_dir}/{key}.jpg"
+        # Commons serves a 640 px thumbnail; on macOS sips recompresses it, elsewhere it is kept as served.
+        ext = "png" if c["url"].lower().endswith(".png") and not shutil.which("sips") else "jpg"
+        dest = f"{a.img_dir}/{key}.{ext}"
         if not os.path.exists(dest):
-            raw = f"/tmp/{key}.src"
+            raw = f"{a.img_dir}/{key}.src"
             subprocess.run(["curl", "-s", "-m", "40", "-A", UA, c["url"], "-o", raw], check=False)
-            r = subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "72", "-Z", "640", raw, "--out", dest], capture_output=True)
+            if shutil.which("sips"):
+                r = subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "72", "-Z", "640", raw, "--out", dest], capture_output=True)
+                os.remove(raw)
+            else:
+                os.replace(raw, dest)
+                r = subprocess.CompletedProcess([], 0 if os.path.getsize(dest) > 1000 else 1)
             if r.returncode:
                 none.append(item["id"]); print(f"fail    {item['id']} {c['title']}", file=sys.stderr); continue
         used[c["title"]] = used.get(c["title"], 0) + 1
         kinds.append(s["kind"])
-        picks.append({"id": item["id"], "col": item["col"], "img": key, "kind": s["kind"], "how": how,
+        picks.append({"id": item["id"], "col": item["col"], "img": key, "src": dest, "kind": s["kind"], "how": how,
                       "subject": s["q"], "file": c["title"], "page": c["page"], "alt": c["desc"] or s["q"],
                       "credit": f"{c['title'].rsplit('.', 1)[0]}, by {c['artist']}, {c['lic']} (Wikimedia Commons)."})
         print(f"{s['kind']:7} {how:8} {item['id']:22} <- {c['title'][:60]} ({c['lic']})", file=sys.stderr)

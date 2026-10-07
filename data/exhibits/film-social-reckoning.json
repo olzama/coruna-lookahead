@@ -12,5 +12,12 @@
  "tbc": "End of run not announced",
  "updatedAt": "2026-10-07T10:30:00Z",
  "source": "refresh",
- "img": "c-3c09d24ddd"
+ "img": "c-3c09d24ddd",
+ "q": 4,
+ "rare": 0,
+ "people": [
+  "Aaron Sorkin"
+ ],
+ "works": [],
+ "series": "new-release"
 }

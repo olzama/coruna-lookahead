@@ -18,5 +18,13 @@
  "demand": "A small bookshop room and a hometown author. Arrive early.",
  "updatedAt": "2026-10-07T09:00:00Z",
  "source": "refresh",
- "img": "fernandez-mallo"
+ "img": "fernandez-mallo",
+ "q": 9,
+ "rare": 1,
+ "people": [
+  "Agustín Fernández Mallo"
+ ],
+ "works": [],
+ "fitw": 2,
+ "series": "moito-conto"
 }
