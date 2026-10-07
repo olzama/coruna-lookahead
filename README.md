@@ -19,6 +19,7 @@ Live page: https://claude.ai/artifact/7GdwbbBHm11NWEP9tGReGn
   The scans take the owner's taste from the profile and work out where to look each time; there is no fixed source list.
 - **Manual refresh**: the Claude Code skill in `.claude/skills/coruna-refresh/` does a full, deeper pass, including reading ticket sites through a browser.
 - `tools/ataquilla-venue-extract.js` lists the exact event pages on an Ataquilla venue page (run in a browser).
+- `tools/pick-images.py` chooses freely licensed pictures from Wikimedia Commons (via Wikidata, categories and search) for a plan of per-listing subjects, keeping a mix of kinds and few repeats; `tools/apply-images.py` adds them to the page and the database.
 
 ## Making your own
 
