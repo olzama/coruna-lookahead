@@ -205,6 +205,7 @@ a.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button.ttl { display: block; font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: default; width: 100%; }
 .ex-head { display: flex; justify-content: space-between; gap: .5rem; align-items: start; }
 .mobile-only { display: none; }
+.filter-note { margin-top: .9rem; display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; font-size: var(--step--1); padding: .55rem .8rem; border-radius: 8px; background: var(--accent-soft); color: var(--ink); }
 .to-top { position: fixed; left: calc(1rem + env(safe-area-inset-left, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 10; font: 600 .8rem/1 var(--font-body); color: var(--bg); background: var(--ink); border: 0; border-radius: 999px; padding: .65rem .95rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .18); }
 .to-top:hover { background: var(--accent); }
 .listing-col { min-width: 0; }
@@ -289,6 +290,8 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
   </div>
   <div class="prefs" id="prefs" hidden></div>
   <div class="typefilter" id="typefilter" role="group" aria-label="Filter by type"></div>
+
+  <div class="filter-note" id="filter-note" hidden role="status"></div>
 
   <section class="book" id="book-sec" aria-labelledby="book-h" hidden>
     <h2 id="book-h">Book early</h2>
@@ -544,6 +547,14 @@ const IMAGES = {
   reiss: { src: "img/reiss.jpg", alt: "Chen Reiss", credit: "Chen Reiss at Fest der Freude 2022, photo by Christian Michelides, CC BY-SA 4.0." },
   egarr: { src: "img/egarr.jpg", alt: "Richard Egarr", credit: "Richard Egarr at the Library of Congress, 2017. Public domain." },
   drexler: { src: "img/drexler.jpg", alt: "Jorge Drexler", credit: "Jorge Drexler, 2010, photo by NaBUru38, CC BY-SA 3.0." },
+  tarkovsky: { src: "img/tarkovsky.jpg", alt: "Andrei Tarkovsky", credit: "Andrei Tarkovsky, photo by Boris Baldin, CC BY-SA 4.0." },
+  mizoguchi: { src: "img/mizoguchi.jpg", alt: "Kenji Mizoguchi", credit: "Kenji Mizoguchi. Public domain." },
+  bergman: { src: "img/bergman.jpg", alt: "Ingmar Bergman", credit: "Ingmar Bergman, 1957. Public domain." },
+  varda: { src: "img/varda.jpg", alt: "Agnès Varda", credit: "Agnès Varda at the Berlinale 2019, photo by Martin Kraft, CC BY-SA 4.0." },
+  kleber: { src: "img/kleber.jpg", alt: "Kleber Mendonça Filho", credit: "Kleber Mendonça Filho, photo by TV Brasil, CC BY 3.0 BR." },
+  sorogoyen: { src: "img/sorogoyen.jpg", alt: "Rodrigo Sorogoyen", credit: "Rodrigo Sorogoyen at the Goya Awards 2019, photo by Pedro J Pacheco, CC BY-SA 4.0." },
+  javis: { src: "img/javis.jpg", alt: "Javier Ambrossi and Javier Calvo", credit: "Los Javis at the Goya Awards 2024, photo by Pedro J Pacheco, CC BY-SA 4.0." },
+  drucker: { src: "img/drucker.jpg", alt: "Léa Drucker", credit: "Léa Drucker, photo by Gérald Garitan, CC BY-SA 4.0." },
   rosalia: { src: "img/rosalia.jpg", alt: "Teatro Rosalía de Castro", credit: "Teatro Rosalía de Castro, photo by Ajuanta, CC0." },
   colon: { src: "img/colon.jpg", alt: "Teatro Colón, A Coruña", credit: "Teatro Colón, photo by Ajuanta, CC0." },
   palacio: { src: "img/palacio.jpg", alt: "Palacio de la Ópera, A Coruña", credit: "Palacio de la Ópera, photo by Zarateman, CC0." }
@@ -573,7 +584,9 @@ let weights = Object.assign({}, DEFAULT_W, store.get("weights", {}));
 let stars = new Set(store.get("stars", []));
 let onlyStarred = store.get("onlyStarred", false);
 let hideLow = store.get("hideLow", false);
-let typeFilter = new Set((store.get("typeFilter", []) || []).filter(c => c in CATS));
+/* Type filters last for the visit only, so a forgotten filter never hides most of the digest. */
+let typeFilter = new Set();
+try { localStorage.removeItem("cl:typeFilter"); } catch {}
 const typeOk = cat => !typeFilter.size || typeFilter.has(cat);
 /* Collapsed state for events ("ev:id"), exhibitions ("ex:id"), days ("day:YYYY-MM-DD") and weeks ("wk:YYYY-MM-DD").
    Everything starts expanded; the viewer's choices are remembered in this browser. */
@@ -741,7 +754,7 @@ function jumpTo(id) {
   let row = document.getElementById("ev-" + id);
   if (!row && view !== "season") { view = "season"; render(); row = document.getElementById("ev-" + id); }
   if (!row) {
-    typeFilter.clear(); store.set("typeFilter", []);
+    typeFilter.clear(); 
     onlyStarred = false; hideLow = false; showDismissed = true;
     for (const [elId, v] of [["only-starred", false], ["hide-low", false], ["show-dismissed", true]]) { const c = document.getElementById(elId); if (c) c.checked = v; }
     render(); row = document.getElementById("ev-" + id);
@@ -1193,18 +1206,38 @@ function renderTypeFilter(win) {
     b.addEventListener("click", onClick);
     box.appendChild(b);
   };
-  chip("All", !typeFilter.size, () => { typeFilter.clear(); store.set("typeFilter", []); render(); });
+  chip("All", !typeFilter.size, () => { typeFilter.clear();  render(); });
   for (const [k, name] of Object.entries(CATS)) {
     const n = counts[k] || 0;
     chip(name, typeFilter.has(k), () => {
       typeFilter.has(k) ? typeFilter.delete(k) : typeFilter.add(k);
-      store.set("typeFilter", [...typeFilter]);
+      
       render();
     }, n, !n && !typeFilter.has(k));
   }
 }
 
+function renderFilterNote() {
+  const box = document.getElementById("filter-note");
+  const parts = [];
+  if (typeFilter.size) parts.push([...typeFilter].map(k => CATS[k] || k).join(", ") + " only");
+  if (onlyStarred) parts.push("starred only");
+  if (hideLow) parts.push("minor listings hidden");
+  box.hidden = !parts.length;
+  if (!parts.length) return;
+  box.innerHTML = `<span>Filtered: <b>${esc(parts.join(" · "))}</b></span>`;
+  const b = el("button", "linkish", "Show everything"); b.type = "button";
+  b.addEventListener("click", () => {
+    typeFilter.clear(); 
+    onlyStarred = false; store.set("onlyStarred", false); hideLow = false; store.set("hideLow", false);
+    for (const id of ["only-starred", "hide-low"]) { const c = document.getElementById(id); if (c) c.checked = false; }
+    render();
+  });
+  box.appendChild(b);
+}
+
 function render() {
+  renderFilterNote();
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view));
   const win = windowFor(view);
   renderTypeFilter(win);
