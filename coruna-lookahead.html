@@ -622,7 +622,7 @@ const IMAGES = {
   candia: { src: "img/candia.jpg", alt: "Bibiana Candia", credit: "Bibiana Candia, photo by Ogalego.gal, CC BY-SA 4.0." },
   vilas: { src: "img/vilas.jpg", alt: "Manuel Vilas", credit: "Manuel Vilas at the Frankfurt Book Fair 2022, photo by Martin Kraft, CC BY-SA 4.0." },
   "fernandez-mallo": { src: "img/fernandez-mallo.jpg", alt: "Agustín Fernández Mallo", credit: "Agustín Fernández Mallo, photo by Mutari. Public domain." },
-  altstaedt: { src: "img/altstaedt.jpg", alt: "Nicolas Altstaedt", credit: "Nicolas Altstaedt, photo by Amadalvarez, CC BY-SA 4.0." },
+  altstaedt: { src: "img/altstaedt.jpg", pos: "50% 72%", alt: "Nicolas Altstaedt", credit: "Nicolas Altstaedt, photo by Amadalvarez, CC BY-SA 4.0." },
   reiss: { src: "img/reiss.jpg", alt: "Chen Reiss", credit: "Chen Reiss at Fest der Freude 2022, photo by Christian Michelides, CC BY-SA 4.0." },
   egarr: { src: "img/egarr.jpg", alt: "Richard Egarr", credit: "Richard Egarr at the Library of Congress, 2017. Public domain." },
   drexler: { src: "img/drexler.jpg", alt: "Jorge Drexler", credit: "Jorge Drexler, 2010, photo by NaBUru38, CC BY-SA 3.0." },
@@ -648,7 +648,8 @@ const DEMAND = {
 const VENUE_IMG = { [V.opera]: "palacio", [V.rosalia]: "rosalia", [V.colon]: "colon" };
 const prof = id => PROFILE[id] || {};
 const imgFor = (id, venue, fallback) => IMAGES[prof(id).img] || (fallback ? IMAGES[VENUE_IMG[venue]] : null);
-const imgTag = (im, cls) => `<img class="${cls}" src="${im.src}" alt="${esc(im.alt)}" loading="lazy">`;
+/* An image's optional pos ("x% y%") is its focal point, for pictures whose subject is far from the default crop. */
+const imgTag = (im, cls) => `<img class="${cls}" src="${im.src}" alt="${esc(im.alt)}" loading="lazy"${/^\d+% \d+%$/.test(im.pos || "") ? ` style="object-position:${im.pos}"` : ""}>`;
 
 /* ---------- state ---------- */
 const store = {
