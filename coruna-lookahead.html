@@ -1,0 +1,1111 @@
+<title>Coruña Lookahead</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single listing column keyed by day, like a theatre's season bill; a narrow summary block on top, exhibitions in a side column on wide screens. */
+:root {
+  --bg: #eef0ee;          /* granite, faintly green-grey */
+  --surface: #f8f9f7;
+  --ink: #18222b;         /* Atlantic slate */
+  --muted: #5b6770;
+  --rule: #d3d8d6;
+  --accent: #1d4f73;      /* deep harbour blue */
+  --accent-soft: #dde7ee;
+  --beacon: #b9761a;      /* lighthouse amber: the "don't miss" signal */
+  --beacon-soft: #f4e6cf;
+  --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 0.9375rem;
+  --step-1: 1.125rem;
+  --step-2: 1.4rem;
+  --step-3: 2.1rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181e; --surface: #18222a; --ink: #e6ebee; --muted: #93a1ab; --rule: #2a3741;
+    --accent: #8cb8d8; --accent-soft: #1d3242; --beacon: #e7a948; --beacon-soft: #3a2c16;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181e; --surface: #18222a; --ink: #e6ebee; --muted: #93a1ab; --rule: #2a3741;
+  --accent: #8cb8d8; --accent-soft: #1d3242; --beacon: #e7a948; --beacon-soft: #3a2c16;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.5; }
+.wrap { max-width: 72rem; margin: 0 auto; padding-inline: 16px; padding-block: 2rem 4rem; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: end; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; }
+.eyebrow { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 .35rem; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--step-3); line-height: 1.1; margin: 0; text-wrap: balance; }
+.coords { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); margin: .4rem 0 0; }
+
+.tabs { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; background: var(--surface); }
+.tabs button { font: 600 var(--step--1)/1 var(--font-body); letter-spacing: .02em; border: 0; background: transparent; color: var(--muted); padding: .6rem 1rem; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+
+.controls { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin-top: 1rem; }
+.linkish { font: 500 var(--step--1) var(--font-body); background: none; border: 0; color: var(--accent); cursor: pointer; padding: .25rem 0; text-decoration: underline; text-underline-offset: 3px; }
+label.toggle { display: inline-flex; gap: .4rem; align-items: center; font-size: var(--step--1); color: var(--muted); cursor: pointer; }
+
+.prefs { margin-top: 1rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .6rem 1.5rem; }
+.pref { display: flex; justify-content: space-between; align-items: center; gap: .75rem; }
+.pref span { font-weight: 500; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.seg button { font: 500 .75rem/1 var(--font-body); border: 0; background: transparent; color: var(--muted); padding: .45rem .55rem; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); }
+.prefs.editor { display: block; }
+.ed-h { font-family: var(--font-display); font-weight: 400; font-size: var(--step-1); margin: 0 0 .25rem; }
+.int-list { display: flex; flex-direction: column; gap: .5rem; margin: .75rem 0; }
+.int-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr) auto auto; gap: .5rem; align-items: center; }
+.int-row input, .int-add input, .ed-field textarea { font: var(--step--1)/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: .4rem .5rem; min-width: 0; width: 100%; }
+.int-label { font-weight: 600 !important; }
+.int-add { display: grid; grid-template-columns: 11rem minmax(0, 1fr) auto; gap: .5rem; margin-bottom: 1rem; }
+.ed-field { display: flex; flex-direction: column; gap: .25rem; margin-top: .75rem; }
+.ed-field label { font-size: var(--step--1); font-weight: 600; }
+@media (max-width: 640px) { .int-row { grid-template-columns: minmax(0, 1fr) auto; } .int-row .int-about { grid-column: 1 / -1; } .int-row .seg { grid-column: 1; } .int-add { grid-template-columns: minmax(0, 1fr); } }
+.prefs-note { grid-column: 1 / -1; font-size: var(--step--1); color: var(--muted); margin: .25rem 0 0; }
+
+.picks { margin-top: 1.75rem; }
+.typefilter { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+.chip { font: 500 .78rem/1 var(--font-body); border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .45rem .75rem; cursor: pointer; display: inline-flex; gap: .35rem; align-items: center; }
+.chip .n { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-pressed="true"] .n { color: var(--bg); opacity: .7; }
+.chip:disabled { opacity: .4; cursor: default; }
+@media (max-width: 640px) { .typefilter { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; } .chip { flex: 0 0 auto; } }
+.book { margin-top: 1.5rem; }
+.book h2 { font-family: var(--font-mono); font-weight: 500; font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--beacon); margin: 0 0 .6rem; }
+.book-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: .5rem; }
+.book-item { display: grid; gap: .1rem; padding: .6rem .75rem; border: 1px solid var(--beacon); border-radius: 8px; background: var(--beacon-soft); color: var(--ink); text-decoration: none; height: 100%; }
+.book-item:hover .ttl { text-decoration: underline; text-underline-offset: 3px; }
+.book-item .when { font-family: var(--font-mono); font-size: .75rem; color: var(--beacon); }
+.book-item .ttl { font-weight: 600; line-height: 1.3; }
+.book-item .why { font-size: .78rem; color: var(--muted); }
+.book-item.alert { border-style: dashed; }
+.book-item .new { font-weight: 700; color: var(--bg); background: var(--beacon); border-radius: 3px; padding: 0 .3rem; }
+.alert-actions { display: flex; gap: .6rem; align-items: center; margin-top: .3rem; font-size: .78rem; }
+.tier.book-tag { background: var(--beacon); color: var(--bg); }
+@media (max-width: 640px) {
+  .book-list { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .book-list li { flex: 0 0 80%; scroll-snap-align: start; }
+}
+.picks h2, .side h2, .week h2 { font-family: var(--font-mono); font-weight: 500; font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 .75rem; }
+.pick-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.pick { background: var(--surface); padding: 0 0 1rem; display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.pick > div { padding-inline: 1rem; }
+a.pick { color: inherit; text-decoration: none; cursor: pointer; }
+a.pick:hover .ttl { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.ev { border-radius: 6px; scroll-margin-block: 5rem; }
+.ev.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { 0%, 30% { background: var(--beacon-soft); box-shadow: 0 0 0 6px var(--beacon-soft); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+@media (prefers-reduced-motion: reduce) { .ev.flash { animation: none; background: var(--beacon-soft); box-shadow: 0 0 0 6px var(--beacon-soft); } }
+.pick-img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: 50% 20%; margin-bottom: .5rem; background: var(--accent-soft); }
+.pick .foryou { font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.pick .when { font-family: var(--font-mono); font-size: var(--step--1); color: var(--beacon); font-weight: 500; }
+.pick .ttl { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.25; text-wrap: balance; }
+.pick .sub { font-size: var(--step--1); color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: 2.5rem; margin-top: 2rem; align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.week + .week { margin-top: 2.25rem; }
+.day { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 1rem; border-top: 1px solid var(--rule); padding-block: .9rem; }
+.day-label { font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.35; }
+.day-label b { display: block; font-weight: 500; font-size: var(--step-0); }
+.day-label .rel { color: var(--muted); }
+.day.today .day-label b { color: var(--beacon); }
+.events { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+@media (max-width: 520px) { .day { grid-template-columns: minmax(0, 1fr); gap: .5rem; } .day-label b, .day-label .rel { display: inline; margin-right: .5rem; } }
+
+.ev { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr) auto; gap: .25rem .75rem; align-items: start; }
+.ev.has-img { grid-template-columns: 3.4rem minmax(0, 1fr) 6rem auto; }
+.thumb { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: 4px; background: var(--accent-soft); }
+.ev.must .thumb { aspect-ratio: 3 / 4; }
+.fit, .warn { font-size: var(--step--1); margin-top: .35rem; max-width: 62ch; line-height: 1.45; }
+.fit b, .warn b { font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-right: .35rem; }
+.fit b { color: var(--accent); }
+.warn { color: var(--muted); }
+.warn b { color: var(--beacon); }
+.ex-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 30%; border-radius: 6px; margin-bottom: .4rem; background: var(--accent-soft); }
+.links { display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; margin-top: .45rem; }
+.links .buy { font: 600 .78rem/1 var(--font-body); background: var(--accent); color: var(--bg); text-decoration: none; padding: .5rem .8rem; border-radius: 999px; }
+.links .buy.secondary { background: var(--accent-soft); color: var(--ink); border: 1px solid var(--accent); }
+.links .buy:hover { filter: brightness(1.08); }
+.links .more { font-size: .78rem; }
+.fb { display: flex; flex-wrap: wrap; gap: .35rem .5rem; align-items: center; margin-top: .5rem; }
+.fb-btn { font: 500 .75rem/1 var(--font-body); border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .4rem .7rem; cursor: pointer; }
+.fb-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.fb-btn.down[aria-pressed="true"] { background: var(--beacon-soft); border-color: var(--beacon); }
+.fb-status { font-size: .72rem; color: var(--muted); }
+.fb-note { flex-basis: 100%; margin: .1rem 0 0; font-size: var(--step--1); color: var(--muted); font-style: italic; max-width: 62ch; }
+.fb-form { flex-basis: 100%; display: flex; flex-direction: column; gap: .4rem; align-items: start; max-width: 62ch; }
+.fb-form textarea { width: 100%; font: var(--step--1)/1.45 var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: .5rem; resize: vertical; }
+.ev.dismissed, .ex.dismissed { opacity: .5; }
+.reg { user-select: all; font-family: var(--font-mono); font-size: .72rem; color: var(--ink); }
+.copyright { margin: .75rem 0 0; }
+.credits { margin-top: .75rem; display: flex; flex-direction: column; gap: .2rem; font-size: .75rem; }
+.ev .time { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); padding-top: .15rem; font-variant-numeric: tabular-nums; }
+.ev .body { min-width: 0; }
+.ev .tagline { display: flex; flex-wrap: wrap; gap: .25rem .6rem; align-items: center; font-size: var(--step--1); color: var(--muted); }
+.cat { font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: .7rem; color: var(--accent); }
+.tier { font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: .1rem .4rem; }
+.tier.must { background: var(--beacon-soft); color: var(--beacon); }
+.tier.rec { border: 1px solid var(--rule); color: var(--ink); }
+.ev .ttl { font-weight: 600; font-size: var(--step-0); line-height: 1.3; margin: .15rem 0 .1rem; }
+.ev.must .ttl { font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); line-height: 1.2; }
+.ev.low .ttl { font-weight: 500; }
+.ev.low { opacity: .72; }
+.ev .who { font-size: var(--step--1); }
+.ev .note { font-size: var(--step--1); color: var(--muted); margin-top: .15rem; max-width: 62ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .2rem .8rem; font-size: .78rem; color: var(--muted); margin-top: .3rem; }
+.tbc { color: var(--beacon); font-weight: 600; }
+.star { border: 0; background: none; cursor: pointer; font-size: 1.15rem; line-height: 1; color: var(--rule); padding: .1rem .2rem; }
+.star[aria-pressed="true"] { color: var(--beacon); }
+.empty { color: var(--muted); border-top: 1px solid var(--rule); padding-top: 1rem; }
+
+.side { display: flex; flex-direction: column; gap: 1.75rem; }
+.ex-list { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.ex { padding-block: .8rem; border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: .15rem; }
+.ex .ttl { font-weight: 600; line-height: 1.3; }
+.ex.must .ttl { font-family: var(--font-display); font-weight: 400; font-size: var(--step-1); }
+.ex .sub { font-size: var(--step--1); color: var(--muted); }
+.ex .run { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+.ex .run .closing { color: var(--beacon); font-weight: 500; }
+.legend { font-size: var(--step--1); color: var(--muted); display: flex; flex-direction: column; gap: .5rem; }
+.legend p { margin: 0; }
+.legend summary { list-style: none; cursor: pointer; }
+.legend summary::-webkit-details-marker { display: none; }
+.legend summary h2 { display: inline; }
+.legend:not([open]) summary h2::after { content: " +"; }
+button.ttl { display: block; font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: default; width: 100%; }
+.ex-head { display: flex; justify-content: space-between; gap: .5rem; align-items: start; }
+.fy, .mobile-only { display: none; }
+@media (max-width: 640px) {
+  .mobile-only { display: inline-flex; }
+  .wrap { padding-block: 1.25rem 3rem; }
+  h1 { font-size: 1.75rem; }
+  header.top { gap: .75rem; }
+  .tabs { width: 100%; }
+  .tabs button { flex: 1; padding-inline: .5rem; }
+  .pick-list { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1px; overscroll-behavior-x: contain; }
+  .pick { flex: 0 0 72%; scroll-snap-align: start; }
+  .pick-img { aspect-ratio: 16 / 10; }
+  .grid { margin-top: 1.5rem; gap: 2rem; }
+  .day { padding-block: .6rem; }
+  .events { gap: .6rem; }
+  .ev, .ev.has-img { grid-template-columns: 2.9rem minmax(0, 1fr) auto; }
+  button.ttl { cursor: pointer; }
+  .ev .ttl, .ev.must .ttl { font-family: var(--font-body); font-weight: 600; font-size: var(--step-0); }
+  .ev.must .ttl { font-family: var(--font-display); font-weight: 400; font-size: var(--step-1); }
+  .ev .ttl::after, .ex .ttl::after { content: " ▾"; color: var(--muted); font-size: .8em; }
+  .ev.open .ttl::after, .ex.open .ttl::after { content: " ▴"; }
+  .fy { display: inline; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+  .ev:not(.open) .venue { display: none; }
+  .ev:not(.open) :is(.who, .note, .fit, .warn, .meta),
+  .ev:not(.open) .thumb,
+  .ex:not(.open) :is(.ex-img, .fit, .ex-detail) { display: none; }
+  .ev:not(.open) .fb, .ev:not(.open) .links { display: none; }
+  body.expand-all .ev .links { display: flex; }
+  body.expand-all .ev .fb { display: flex; }
+  .ev.open.has-img { grid-template-columns: 2.9rem minmax(0, 1fr) 4.25rem auto; }
+  body.expand-all .ev .venue { display: inline; }
+  body.expand-all .ev :is(.who, .note, .fit, .warn, .meta) { display: block; }
+  body.expand-all .ev .meta { display: flex; }
+  body.expand-all .ev.has-img { grid-template-columns: 2.9rem minmax(0, 1fr) 4.25rem auto; }
+  body.expand-all .ev .thumb, body.expand-all .ex :is(.ex-img, .fit, .ex-detail) { display: block; }
+  body.expand-all .ev .ttl::after, body.expand-all .ex .ttl::after { content: none; }
+  .ex { padding-block: .6rem; }
+  .side { gap: 1.25rem; }
+}
+footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem; font-size: var(--step--1); color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .tabs button, .seg button { transition: background .15s, color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Cultural lookahead</p>
+      <h1>Coruña Lookahead</h1>
+      <p class="coords">43.37° N · 8.40° W · <span id="compiled"></span></p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Time window">
+      <button role="tab" id="tab-week" data-view="week">This week</button>
+      <button role="tab" id="tab-month" data-view="month">Next 30 days</button>
+      <button role="tab" id="tab-season" data-view="season">Everything ahead</button>
+    </div>
+  </header>
+
+  <div class="controls">
+    <button class="linkish" id="prefs-toggle" aria-expanded="false" aria-controls="prefs">Your interests</button>
+    <label class="toggle"><input type="checkbox" id="only-starred"> Starred only</label>
+    <label class="toggle" id="dismissed-wrap" hidden><input type="checkbox" id="show-dismissed"> Show dismissed <span id="dismissed-n"></span></label>
+    <label class="toggle"><input type="checkbox" id="hide-low"> Hide minor listings</label>
+    <label class="toggle mobile-only"><input type="checkbox" id="expand-all"> Show all details</label>
+  </div>
+  <div class="prefs" id="prefs" hidden></div>
+  <div class="typefilter" id="typefilter" role="group" aria-label="Filter by type"></div>
+
+  <section class="book" id="book-sec" aria-labelledby="book-h" hidden>
+    <h2 id="book-h">Book early</h2>
+    <ul class="book-list" id="book"></ul>
+  </section>
+
+  <section class="picks" aria-labelledby="picks-h">
+    <h2 id="picks-h">Don't miss</h2>
+    <div class="pick-list" id="picks"></div>
+  </section>
+
+  <div class="grid">
+    <main id="listing"></main>
+    <aside class="side">
+      <section>
+        <h2>On view</h2>
+        <div class="ex-list" id="exhibits"></div>
+      </section>
+      <details class="legend" id="legend" open>
+        <summary><h2>How it ranks</h2></summary>
+        <p>Each listing has an editorial rating from 1 to 5. That rating is multiplied by your interest in its category, and listings with a <b>For you</b> note get a bonus. <b>Don't miss</b> and <b>Recommended</b> come from that score; the top strip also favours what is soonest.</p>
+        <p><b>For you</b> notes draw on your journal (opera as drama, Wagner and Strauss, Russian repertoire, émigré memoirs, Flemish painting, a feminist reading of books) and on what you read and care about now: contemporary fiction, Galicia and its language and culture, languages and linguistics, AI, chess, and animals.</p>
+        <p>Items marked <span class="tbc">to confirm</span> have incomplete or conflicting details in the sources. Check the venue before buying.</p>
+      </details>
+    </aside>
+  </div>
+
+  <footer>
+    Compiled from venue and city listings: Orquesta Sinfónica de Galicia, Amigos de la Ópera, Teatro Rosalía de Castro, Teatro Colón, Palacio de la Ópera, Filmoteca de Galicia, Fundación Barrié, Afundación, Museo de Belas Artes, Fundación Luis Seoane, Bibliotecas Municipais, Librería Moito Conto. Ratings and stars are stored only in this browser.
+    <div class="credits" id="credits"></div>
+    <p class="copyright">© 2026 Olga Zamaraeva. This page, its design and its scan instructions are licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>: you may copy and adapt them, including commercially, as long as you credit Olga Zamaraeva and link to the licence. Event details belong to their venues; images are credited above under their own licences.</p>
+  </footer>
+</div>
+
+<script>
+const COMPILED = "2026-10-07";
+
+const CATS = {
+  orchestral: "Orchestral", chamber: "Chamber & recitals", opera: "Opera", dance: "Dance", theater: "Theatre",
+  cinema: "Cinema", art: "Art", literature: "Literature", architecture: "Architecture", science: "Science & ideas", chess: "Chess", animals: "Animals", music: "Other music"
+};
+const DEFAULT_W = { orchestral: 3, chamber: 3, opera: 3, dance: 3, theater: 3, cinema: 3, art: 3, literature: 3, architecture: 3, science: 2, chess: 3, animals: 3, music: 1 };
+const LEVELS = [["Off", 0], ["Some", 1], ["Like", 2], ["Love", 3]];
+
+const CITY = slug => `https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/${slug}?argIdioma=es`;
+const PAL = slug => `https://www.palaciodelaopera.com/evento/${slug}/`;
+const AQ = path => `https://entradas.ataquilla.com/es/ventaentradas/${path}`;
+const MOITO = slug => `https://www.moitoconto.com/agenda/${slug}`;
+const FILMO = slug => `https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/${slug}`;
+const S = {
+  sande: "https://sandeajedrez.com/proximos-torneos/",
+  colonCinema: CITY("colon-cinema/suceso/1453926452147"),
+  tandem: CITY("ciclo-tandem/suceso/1453926862630"),
+  noites: CITY("v-ciclo-de-conciertos-noites-na-cidade-vella/suceso/1453925127929"),
+  camara: CITY("ciclo-concertos-de-camara/suceso/1453928361528"),
+  mbacHabana: "https://museobelasartescoruna.xunta.gal/es/exposiciones/habana-mater-2003-2023-luis-gabu",
+  barrieBosco: "https://fundacionbarrie.org/exposicion-bosco-bruegel",
+  barrieLlorens: "https://fundacionbarrie.org/francisco-llorens-1874-1948",
+  seoane: "https://fundacionluisseoane.gal/es/exposiciones/seoane-reencontrado-oleos-1945-1977/",
+  lirica: "https://www.amigosoperacoruna.org/lirica-inclusiva/",
+  afuOpera: "https://www.afundacion.org/es/agenda/evento/actividades-paralelas-de-la-74-a-temporada-lirica-sede-afundacion-a-coruna/",
+  humboldt: "https://muncyt.es/actividades/ciclo-de-conferencias-los-instrumentos-de-humboldt-herramientas-para-concebir-una-nueva",
+  mejuto: "https://www.afundacion.org/es/agenda/evento/exposicion-vitor-mejuto-coruna-ciudad-en-a-coruna/",
+  arqNews: "https://www.coruna.gal/web/gl/actualidade/novas/nova/a-coruna-redescubre-o-seu-patrimonio-brutalista-na-setima-edicion-da-semana-da-arquitectura/suceso/1453927951124",
+  arqProg: "https://www.coruna.gal/descarga/1453927951124/A4_Programa_Semana-Arquitectura_2026_V.2.pdf",
+  fiesta: "https://www.fiestadelcine.com/"
+};
+const OSG_AQ = "conciertos_clasica/115-palacio-de-la-opera/";
+/* Ataquilla's own list for a venue: the fallback when an event's exact ticket page is not yet findable. */
+const VENUE_TIX = {
+  "Teatro Rosalía de Castro": AQ("recintos/240-teatro-rosalia"),
+  "Teatro Colón": AQ("recintos/241-teatro-colon")
+};
+
+const V = {
+  opera: "Palacio de la Ópera", rosalia: "Teatro Rosalía de Castro", colon: "Teatro Colón",
+  filmo: "Filmoteca de Galicia", forum: "Fórum Metropolitano", forumCine: "Cines Fórum Metropolitano", moito: "Librería Moito Conto"
+};
+
+/* pick: editorial rating 1–5. dates: [date, time]. src: the event's own page.
+   buy: direct ticket page, or {date: url} when each performance has its own. tix: src has a ticket box. */
+const EVENTS = [
+  // Classical
+  { id: "colonia", cat: "orchestral", t: "Kölner Kammerorchester", who: "Chamber orchestra from Cologne", v: "Auditorio del Fórum Metropolitano", dates: [["2026-10-08", "20:30"]], pick: 3, price: "€23 (students under 28 €15)", src: CITY("concierto-de-la-orquesta-de-camara-de-colonia/suceso/1453923662290"), buy: AQ("conciertos_clasica/255-forum-metropolitano/x3am6t8z-concierto-de-la-orquesta-de-camara-de-colonia"), note: "" },
+  { id: "osg-altstaedt", cat: "orchestral", t: "Schumann: Cello Concerto · Dvořák: Symphony No. 7", who: "Nicolas Altstaedt, cello and direction · OSG", v: V.opera, dates: [["2026-10-09", "20:00"], ["2026-10-10", "20:00"]], pick: 4, price: "from €14.25", src: PAL("sinfonica-galicia-09-10-26-nicolas-altstaedt-solista-y-director"), buy: { "2026-10-09": AQ(OSG_AQ + "x3amf956-sinfonica-de-galicia-092f102f26-nicolas-altstaedt-solista-y-director"), "2026-10-10": AQ(OSG_AQ + "x3amens6-sinfonica-de-galicia-102f102f26-nicolas-altstaedt-solista-y-director") }, tbc: "One more work still to be announced", note: "Altstaedt leads from the cello." },
+  { id: "noites", cat: "chamber", t: "Noites na Cidade Vella", who: "9 Oct Miguel Iglesias, piano (Afundación) · 14 Oct, 12:00 Hrachya Avanesyan, violin & Jean-Baptiste Doulcet, piano (Afundación) · 17 Oct Orquestra de Cámara Galega, cond. Rogelio Groba (Iglesia de los Dominicos)", v: "Old town venues", dates: [["2026-10-09", "20:00"], ["2026-10-14", "12:00"], ["2026-10-17", "21:00"]], pick: 3, price: "free", src: S.noites, note: "Last three concerts of the free chamber cycle. First come, first served." },
+  { id: "camara", cat: "chamber", t: "Sociedade Filharmónica: Concertos de Cámara", who: "13 Oct Lana Trotovšek, violin & María Canyigueral, piano · 27 Oct Geister Duo, piano duet · 10 Nov Johannes Krebs, cello & Damián Hernández, piano · 24 Nov Dúo Apellániz, cello & piano · 15 Dec Christmas concert, Orquestra de Cámara Galega", v: V.rosalia, dates: [["2026-10-13", "20:00"], ["2026-10-27", "20:00"], ["2026-11-10", "20:00"], ["2026-11-24", "20:00"], ["2026-12-15", "20:00"]], pick: 4, price: "€20 (under 25: €5)", src: S.camara, tix: true, note: "" },
+  { id: "osg-reiss", cat: "orchestral", t: "Strauss: Four Last Songs · Mendelssohn: Symphony No. 5 'Reformation'", who: "Chen Reiss, soprano · Alexander Liebreich · OSG", v: V.opera, dates: [["2026-10-30", "20:00"]], pick: 5, price: "from €14.25", src: PAL("sinfornica-de-galicia-30-10-26-strauss-cuatro-ultimas-canciones-chen-reiss"), buy: AQ(OSG_AQ + "x3amfa14-sinfonica-de-galicia-302f102f26-strauss-cuatro-ultimas-canciones-chen-reiss"), note: "Opens with Mario Cortizo's As marxes." },
+  { id: "osg-egarr", cat: "orchestral", t: "Haydn: Nelson Mass · Mozart: Symphony No. 39", who: "Richard Egarr · OSG and chorus", v: V.opera, dates: [["2026-11-06", "20:00"], ["2026-11-07", "20:00"]], pick: 5, price: "from €14.25", src: PAL("sinfornica-de-galicia-06-11-26-in-angustiis-haydn-richard-egarr"), buy: { "2026-11-06": AQ(OSG_AQ + "x3amfb0g-sinfonica-de-galicia-062f112f26-in-angustiis-haydn-richard-egarr"), "2026-11-07": AQ(OSG_AQ + "x3ameqac-sinfonica-de-galicia-072f112f26-in-angustiis-haydn-richard-egarr") }, note: "Soloists Elionor Martínez, Helena Ressurreição, Vicent Romero, Sebastià Peris." },
+  { id: "osg-falla", cat: "opera", t: "Falla: La vida breve (concert)", who: "José Trigueros · OSG and chorus · Raquel Lojendio, Sandra Calderón (cantaora)", v: V.opera, dates: [["2026-12-04", "20:00"], ["2026-12-05", "20:00"]], pick: 4, price: "from €14.25", src: PAL("sinfonica-de-galicia-04-12-26-manuel-de-falla-la-vida-breve"), buy: { "2026-12-04": AQ(OSG_AQ + "x3amfbn3-sinfonica-de-galicia-042f122f26-manuel-de-falla-la-vida-breve"), "2026-12-05": AQ(OSG_AQ + "x3amerd1-sinfonica-de-galicia-052f122f26-manuel-de-falla-la-vida-breve") }, note: "First half: Bal y Gay, Rosa García Ascot, Rodolfo Halffter." },
+  { id: "osg-scheh", cat: "orchestral", t: "Rimsky-Korsakov: Scheherazade · Grieg: Piano Concerto", who: "Eduardo Rojas, piano · Alejandro Posada · OSG", v: V.opera, dates: [["2026-12-11", "20:00"]], pick: 3, price: "from €14.25", src: PAL("sinfonica-de-galicia-11-12-26-scheherezade-rimski-korsakov"), buy: AQ(OSG_AQ + "x3amfd11-sinfonica-de-galicia-112f122f26-scheherezade-rimski-korsakov"), note: "" },
+  { id: "osg-rosen", cat: "orchestral", t: "Strauss: Der Rosenkavalier suite · Mozart: Violin Concerto No. 4", who: "Roberto González-Monjas, violin and direction · OSG", v: V.opera, dates: [["2026-12-18", "20:00"]], pick: 4, price: "from €14.25", src: PAL("sinfonica-de-galicia-18-12-26-el-caballero-de-la-rosa-roberto-gonzalez-monjas"), buy: AQ(OSG_AQ + "x3amfdyn-sinfonica-de-galicia-182f122f26-el-caballero-de-la-rosa-roberto-gonzalez-monjas"), note: "With Korngold's Theme and Variations and Straussiana." },
+  { id: "osg-disco", cat: "music", t: "Night Fever: symphonic disco", who: "OSG", v: V.opera, dates: [["2026-11-26", "20:00"]], pick: 1, price: "from €14.25", src: PAL("night-fever-musica-disco-sinfonica-de-galicia"), buy: AQ(OSG_AQ + "x3amg2c6-night-fever-musica-disco-sinfonica-de-galicia"), note: "" },
+
+  { id: "afc-barroco", cat: "chamber", t: "OSG Baroque and Classical Ensemble", who: "Afundación chamber series", v: "Auditorio Sede Afundación", dates: [["2026-10-28", "20:00"]], pick: 3, price: "€16.60", src: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcke3-ciclo-de-musica-de-camara3a-ensemble-barroco-y-clasico-de-la-osg"), buy: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcke3-ciclo-de-musica-de-camara3a-ensemble-barroco-y-clasico-de-la-osg"), note: "Players from the Sinfónica on period-style forces." },
+  { id: "afc-eklektika", cat: "chamber", t: "Eklektika Ensemble", who: "Afundación chamber series", v: "Auditorio Sede Afundación", dates: [["2026-11-18", "20:00"]], pick: 2, price: "€16.60", src: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcppn-ciclo-de-musica-de-camara3a-eklectika-ensemble"), buy: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcppn-ciclo-de-musica-de-camara3a-eklectika-ensemble"), note: "" },
+  { id: "afc-ecos", cat: "chamber", t: "Trío Ecos del Atlántico", who: "Afundación chamber series", v: "Auditorio Sede Afundación", dates: [["2026-12-16", "20:00"]], pick: 2, price: "€16.60", src: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcqev-ciclo-de-musica-de-camara3a-trio-ecos-del-atlantico"), buy: AQ("conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcqev-ciclo-de-musica-de-camara3a-trio-ecos-del-atlantico"), note: "" },
+
+  // Opera
+  { id: "tosca", cat: "opera", t: "Puccini: Tosca", who: "Miren Urbieta-Vega · Ragaa Eldin · Carlos Álvarez · OSG, Coros Gaos & Cantabile", v: V.opera, dates: [["2026-10-22", "19:00"], ["2026-10-24", "19:00"]], pick: 5, price: "from €43.20", src: PAL("opera-tosca-de-giacomo-puccini"), buy: AQ("lirica/115-palacio-de-la-opera/x3akv69a-opera3a-tosca-de-giacomo-puccini"), note: "74th Lyric Season. Production from Opéra-Théâtre de Metz, conducted by Paul-Émile Fourny. First Tosca in A Coruña in 22 years. The best seats have gone (7 Oct)." },
+  { id: "lirica-incl", cat: "opera", t: "Inclusive lyric recitals", who: "Carmen Larios · Chiara Salerno · Nerea González, with Gabriel López at the piano", v: "Civic centres: Monte Alto, Circo de Artesanos, Fórum", dates: [["2026-10-29", "19:00"], ["2026-11-06", ""], ["2026-11-18", ""]], pick: 2, price: "free", src: S.lirica, note: "Young singers. 29 Oct Monte Alto, 6 Nov Circo de Artesanos, 18 Nov Fórum." },
+
+  { id: "op-juive", cat: "opera", t: "Screening: Halévy, La Juive", who: "Wiener Staatsoper, 1999, cond. Vjekoslav Šutej", v: "Sede Afundación, press room", dates: [["2026-10-19", "18:30"]], pick: 3, price: "free", src: S.afuOpera, note: "French subtitles only. Free until full." },
+  { id: "op-talk-tosca", cat: "opera", t: "Talk: the keys to Tosca", who: "Irene de Juan Bernabéu, musicologist (Radio Clásica, Teatro Real)", v: "Sede Afundación, press room", dates: [["2026-10-21", "19:00"]], pick: 4, price: "free", src: S.afuOpera, note: "With recorded examples, the day before the first performance. Free until full." },
+  { id: "op-wozzeck", cat: "opera", t: "Screening: Berg, Wozzeck", who: "Opera on film", v: "Sede Afundación, press room", dates: [["2026-10-26", "18:30"]], pick: 4, price: "free", src: S.afuOpera, note: "Free until full." },
+
+  // Dance
+  { id: "trc-join", cat: "dance", t: "Dance Join", who: "TRCdanza", v: V.rosalia, dates: [["2026-10-09", "20:30"]], pick: 3, price: "€8", src: CITY("trcdanza-dance-join/suceso/1453919482479"), buy: AQ("danza/240-teatro-rosalia/x3akny61-trc-danza-dance-join"), note: "" },
+  { id: "kiev-swan", cat: "dance", t: "Swan Lake", who: "Ballet de Kiev (touring)", v: V.opera, dates: [["2026-10-17", "20:30"]], pick: 1, price: "from €41.34", src: PAL("el-lago-de-los-cisnes-ballet-kiev"), buy: AQ("danza/115-palacio-de-la-opera/x3akg51q-el-lago-de-los-cisnes-ballet-de-kiev-"), note: "" },
+  { id: "trc-natural", cat: "dance", t: "Natural order of things", who: "GN|MC Guy Nader | Maria Campos · TRCdanza", v: V.rosalia, dates: [["2026-10-24", "20:30"]], pick: 4, price: "€12", src: CITY("trcdanza-natural-order-of-things/suceso/1453919486824"), buy: AQ("danza/240-teatro-rosalia/x3aknznf-trc-danza-natural-order-of-things"), note: "Nine dancers; winner of three 2025 Max awards, including best choreography." },
+  { id: "trc-mutar", cat: "dance", t: "Mutar. Romper. Vibrar", who: "TRCdanza", v: V.rosalia, dates: [["2026-10-30", "20:30"]], pick: 3, price: "€10", src: CITY("trcdanza-mutar-romper-vibrar/suceso/1453919489843"), buy: AQ("danza/240-teatro-rosalia/x3akp876-trc-danza-mutar-romper-vibrar"), note: "" },
+  { id: "trc-ontime", cat: "dance", t: "On time", who: "Urban and contemporary dance · TRCdanza", v: V.rosalia, dates: [["2026-11-08", "20:30"]], pick: 2, price: "free", src: CITY("trcdanza-on-time/suceso/1453919491228"), note: "" },
+  { id: "trc-no", cat: "dance", t: "No", who: "TRCdanza", v: V.rosalia, dates: [["2026-11-27", "20:30"]], pick: 3, price: "€12", src: CITY("trcdanza-no/suceso/1453919493902"), buy: AQ("danza/240-teatro-rosalia/x3akp90c-trc-danza-no"), note: "" },
+  { id: "trc-cicatriz", cat: "dance", t: "Cicatriz", who: "TRCdanza", v: V.rosalia, dates: [["2026-12-04", "20:30"]], pick: 3, price: "€8", src: CITY("trcdanza-cicatriz/suceso/1453919501057"), buy: AQ("danza/240-teatro-rosalia/x3akpag0-trc-danza-cicatriz"), note: "" },
+
+  // Theatre
+  { id: "caamano", cat: "literature", t: "Circes e Morganas: celebrating Begoña Caamaño", who: "Readings, music and visuals; staged by Marina Oural and Ugia Pedreira", v: V.colon, dates: [["2026-10-07", "21:00"]], pick: 3, price: "free", src: "https://www.coruna.gal/web/gl/actualidade/novas/nova/o-teatro-colon-acollera-este-mercores-un-espectaculo-que-reivindica-a-figura-de-begona-caamano/suceso/1453928687803", note: "" },
+  { id: "matrimonio", cat: "theater", t: "Un matrimonio sin filtros", who: "Javier Veiga", v: V.colon, dates: [["2026-10-08", "20:30"], ["2026-10-09", "20:30"], ["2026-10-10", "20:30"]], pick: 1, price: "€24–28", src: CITY("un-matrimonio-sin-filtros/suceso/1453917215765"), buy: AQ("teatro/241-teatro-colon/x3akwsm0-un-matrimonio-sin-filtros"), note: "Commercial comedy." },
+  { id: "adolescencia", cat: "theater", t: "Adolescencia infinita", who: "Pont Flotant (Escalante production)", v: V.rosalia, dates: [["2026-10-16", "20:30"], ["2026-10-17", "20:30"]], pick: 4, price: "€8.50–18", src: CITY("ciclo-principal-adolescencia-infinita/suceso/1453921894951"), buy: AQ("teatro/240-teatro-rosalia/x3am5ttj-ciclo-principal-outono-2026-adolescencia-infinita-de-pont-flotant"), note: "Ciclo Principal. Three adults trying to understand adolescence, theirs and today's, with live music." },
+  { id: "escandalo", cat: "theater", t: "Escándalo en redacción", who: "Estudo Momento", v: V.colon, dates: [["2026-10-16", "21:00"], ["2026-10-17", "20:30"]], pick: 3, price: "€21–25", src: CITY("escandalo-en-redaccion/suceso/1453919631108"), buy: AQ("teatro/241-teatro-colon/x3aky8c2-escandalo-en-redaccion"), note: "New high comedy from the company behind Escándalo en palacio, de 1888 and Señorita Julia." },
+  { id: "desconquista", cat: "theater", t: "La desconquista", who: "Ron Lalá", v: V.rosalia, dates: [["2026-11-06", "20:30"], ["2026-11-07", "20:30"]], pick: 4, price: "€8.50–18", src: CITY("ciclo-principal-la-desconquista/suceso/1453921897987"), buy: AQ("teatro/240-teatro-rosalia/x3am5vrq-ciclo-principal-outono-2026-la-desconquista-de-ron-lala"), note: "Ciclo Principal. Musical comedy in Golden Age verse about three castaways bound for the New World." },
+  { id: "entusiasmo", cat: "theater", t: "El entusiasmo", who: "Pablo Remón · with Francesco Carril, Natalia Hernández, Raúl Prieto, Marina Salas", v: V.rosalia, dates: [["2026-11-13", "20:30"], ["2026-11-14", "20:30"]], pick: 5, price: "€10–25", src: CITY("ciclo-principal-el-entusiasmo/suceso/1453921902405"), buy: AQ("teatro/240-teatro-rosalia/x3am5zs3-ciclo-principal-outono-2026-el-entusiasmo-de-pablo-remon"), note: "Ciclo Principal. Max award 2026 for best writing. 125 minutes." },
+  { id: "violencia", cat: "theater", t: "Violencia", who: "Dir. Diego Garrido Sanz · with Esther Ortega, Cecilia Freire", v: V.rosalia, dates: [["2026-11-20", "20:30"], ["2026-11-21", "20:30"]], pick: 4, price: "€9.50–21.50", src: CITY("ciclo-principal-violencia/suceso/1453921905674"), buy: AQ("teatro/240-teatro-rosalia/x3am5ww3-ciclo-principal-outono-2026-violencia-de-fran-kranz"), note: "Ciclo Principal. Forgiveness and coexistence after a school shooting." },
+  { id: "barraca", cat: "theater", t: "La barraca", who: "After Blasco Ibáñez", v: V.rosalia, dates: [["2026-11-28", "20:30"]], pick: 3, price: "€9.50–21.50", src: CITY("ciclo-principal-la-barraca/suceso/1453921909179"), buy: AQ("teatro/240-teatro-rosalia/x3am5myq-ciclo-principal-outono-2026-la-barraca-de-blasco-ibanez"), note: "" },
+  { id: "libres", cat: "theater", t: "Libres!!! Un cabaret anarcosicalíptico", who: "Esther F. Carrodeguas", v: V.rosalia, dates: [["2026-12-11", "20:30"], ["2026-12-12", "20:30"]], pick: 3, price: "€9.50–21.50", src: CITY("ciclo-principal-libres-un-cabaret-anarcosiicaliptico/suceso/1453921910371"), buy: AQ("teatro/240-teatro-rosalia/x3am61g6-ciclo-principal-outono-2026-libres212121-un-cabaret-anarcosicaliptico-de-esther-f-carrodeguas"), note: "" },
+  { id: "blackbox", cat: "theater", t: "Black Box: unha saga épica", who: "Gabriel Calderón & Hugo Torres", v: V.rosalia, dates: [["2026-12-13", "19:00"]], pick: 3, price: "€6.50–14", src: CITY("ciclo-principal-black-box-unha-saga-epica/suceso/1453921912774"), buy: AQ("teatro/240-teatro-rosalia/x3am5m3r-ciclo-principal-outono-2026-black-box-unha-saga-epica-de-gabriel-calderon-e-hugo-torres"), note: "" },
+  { id: "picasso", cat: "theater", t: "El barbero de Picasso", who: "Borja Ortiz de Gondra · with Antonio Molero, Pepe Viyuela", v: V.rosalia, dates: [["2026-12-18", "20:30"], ["2026-12-19", "20:30"]], pick: 4, price: "€10–25", src: CITY("ciclo-principal-el-barbero-de-picasso/suceso/1453921933228"), buy: AQ("teatro/240-teatro-rosalia/x3am63nb-ciclo-principal-outono-2026-el-barbero-de-picasso-de-borja-ortiz-de-gondra"), note: "Picasso's friendship with his barber Eugenio Arias in 1950s France." },
+
+  // Cinema
+  { id: "sonbert", cat: "cinema", t: "Puente aéreo: the cinema of Warren Sonbert", who: "Cycle presented by Francisco Algarín & Carlos Saldaña", v: V.filmo, dates: [["2026-10-07", ""]], pick: 3, price: "", src: FILMO("puente-aereo-el-cine-de-warren-sonbert"), tbc: "Session dates and times are on the cycle page", note: "American avant-garde diarist filmmaker, rarely screened." },
+  { id: "intersec", cat: "cinema", t: "Intersección 2026: international shorts", who: "A Coruña International Film Festival", v: V.filmo, dates: [["2026-10-13", "18:00"], ["2026-10-14", "18:00"], ["2026-10-15", "18:00"]], pick: 3, price: "", src: FILMO("interseccion-2026"), note: "Four themed sessions at the Filmoteca. The full festival runs 15–19 Oct at the Colón, Palexco and Fundación Seoane: interseccion.gal." },
+  { id: "habana-cine", cat: "cinema", t: "Habana Mater film cycle", who: "Accompanies the Luis Gabú exhibition", v: "Museo de Belas Artes", dates: [["2026-10-14", ""], ["2026-10-21", ""], ["2026-10-28", ""]], pick: 2, price: "", src: S.mbacHabana, note: "Wednesdays." },
+  { id: "fiesta-cine", cat: "cinema", t: "Fiesta del Cine: €3.50 tickets", who: "Cantones Cines and Marineda City cinemas", v: "Commercial cinemas", dates: [["2026-10-19", ""], ["2026-10-20", ""], ["2026-10-21", ""], ["2026-10-22", ""]], pick: 2, price: "€3.50", src: S.fiesta, note: "No registration needed; buy at the box office or online." },
+  { id: "kleber", cat: "cinema", t: "Kleber Mendonça Filho", who: "Retrospective", v: V.filmo, dates: [["2026-10-20", ""], ["2026-10-21", ""]], pick: 4, price: "", src: FILMO("kleber-mendonca-filho"), note: "The director of Aquarius, Bacurau and The Secret Agent." },
+  { id: "espejo", cat: "cinema", t: "Mirror (Zerkalo)", who: "Andrei Tarkovsky · Colón Cinema, with a talk by María von Touceda", v: V.colon, dates: [["2026-10-22", "19:00"]], pick: 5, price: "€6", src: S.colonCinema, buy: AQ("cine/241-teatro-colon/x3amh8ac-colon-cinema-zerkalo-28el-espejo29-de-abdrei-tarkovski"), note: "Same time as the first Tosca." },
+  { id: "lucatena", cat: "cinema", t: "Rafael Luca de Tena retrospective", who: "Materiais para unha historia do cine en Galicia", v: V.filmo, dates: [["2026-10-23", "18:00"]], pick: 2, price: "", src: FILMO("materiais-para-unha-historia-do-cine-en-galicia"), note: "" },
+  { id: "animaccion", cat: "cinema", t: "Animacción 2026", who: "Animation festival, including Annecy winners", v: V.filmo, dates: [["2026-10-28", ""], ["2026-10-29", ""], ["2026-10-30", ""], ["2026-10-31", ""]], pick: 2, price: "", src: FILMO("animaccion-2026"), note: "" },
+  { id: "ugetsu", cat: "cinema", t: "Ugetsu (Cuentos de la luna pálida)", who: "Kenji Mizoguchi · Colón Cinema", v: V.colon, dates: [["2026-11-05", "19:30"]], pick: 5, price: "€6", src: S.colonCinema, buy: AQ("cine/241-teatro-colon/x3amh9a4-colon-cinema-ugetsu-monogatari-28cuentos-de-la-luna-palida29-de-kenji-mizoguchi"), note: "" },
+  { id: "docs-nov", cat: "cinema", t: "Numakage Public Pool", who: "Shingo Ota · Docs del mes", v: V.forumCine, dates: [["2026-11-05", "20:00"]], pick: 2, price: "€3", src: CITY("noviembre-2026-docs-del-mes-numakage-public-pool-de-shingo-ota/suceso/1453923353182"), buy: AQ("documental/255-forum-metropolitano/x3amb95t-el-doc-del-mes-numakage-public-pool-de-shingo-ota-"), note: "" },
+  { id: "african-queen", cat: "cinema", t: "The African Queen", who: "John Huston", v: V.forumCine, dates: [["2026-11-06", "20:00"], ["2026-11-07", "17:30"]], pick: 3, price: "€3", src: CITY("the-african-queen-la-reina-de-africa-de-john-huston/suceso/1453923453696"), buy: AQ("cine/255-forum-metropolitano/x3ambg11-cinemania-clasica-the-african-queen-28la-reina-de-africa29-de-john-huston"), note: "Saturday also at 20:00." },
+  { id: "modern", cat: "cinema", t: "Modern Times", who: "Charles Chaplin · Colón Cinema", v: V.colon, dates: [["2026-11-19", "19:30"]], pick: 4, price: "€6", src: S.colonCinema, buy: AQ("default_category/241-teatro-colon/x3amhbe2-colon-cinema-modern-times-28tiempos-modernos29-de-charles-chaplin"), note: "" },
+  { id: "seventh", cat: "cinema", t: "The Seventh Seal", who: "Ingmar Bergman · Colón Cinema", v: V.colon, dates: [["2026-12-03", "19:30"]], pick: 4, price: "€6", src: S.colonCinema, buy: AQ("cine/241-teatro-colon/x3amh9td-colon-cinema-det-sjunde-inseglet-28el-septimo-sello29-de-ingmar-bergman"), note: "" },
+  { id: "docs-dic", cat: "cinema", t: "La Pietá", who: "Pepe Andreu · Docs del mes", v: V.forumCine, dates: [["2026-12-03", "20:00"]], pick: 2, price: "€3", src: CITY("diciembre-2026-docs-del-mes-la-pieta-de-pepe-andreu/suceso/1453923355919"), buy: AQ("documental/255-forum-metropolitano/x3amba6p-el-doc-del-mes-la-pieta-de-pepe-andreu"), note: "" },
+  { id: "cousins", cat: "cinema", t: "Les Cousins", who: "Claude Chabrol", v: V.forumCine, dates: [["2026-12-04", "20:00"], ["2026-12-05", "17:30"]], pick: 3, price: "€3", src: CITY("les-cousins-los-primos-de-claude-chabrol/suceso/1453923454388"), buy: AQ("cine/255-forum-metropolitano/x3ambh6p-cinemania-clasica-les-cousins-28los-primos29-de-claude-chabrol"), note: "Saturday also at 20:00." },
+  { id: "varda", cat: "cinema", t: "Vagabond (Sans toit ni loi)", who: "Agnès Varda · Colón Cinema", v: V.colon, dates: [["2026-12-20", "19:00"]], pick: 4, price: "€6", src: S.colonCinema, buy: AQ("cine/241-teatro-colon/x3amhchw-colon-cinema-sans-toit-ni-loi-28sin-techo-ni-ley29-de-agnes-varda"), note: "" },
+
+  // Literature
+  { id: "castelao", cat: "literature", t: "Castelao's Un ollo de vidro: talk by María Pilar García Negro", who: "Memorias dun esquelete (1922), read for Samaín", v: "Centro Sociocultural Ágora", dates: [["2026-10-08", "19:00"]], pick: 3, price: "free", src: CITY("castelao-a-traves-de-memorias-dun-esquelete-un-ollo-de-vidro-conferencia-de-actualidade-de-maria/suceso/1453928594897"), note: "" },
+  { id: "candia", cat: "literature", t: "Bibiana Candia: Lar", who: "Novel (Alfaguara) · author presentation", v: V.moito, dates: [["2026-10-08", "19:00"]], pick: 4, price: "free", src: MOITO("presentacion-de-bibiana-candia-_265"), note: "" },
+  { id: "tibuleac", cat: "literature", t: "Tatiana Țîbuleac: Cuando seas feliz, golpea tú primero", who: "In conversation with Andrés Seoane (Impedimenta)", v: V.moito, dates: [["2026-10-09", "19:30"]], pick: 5, price: "free", src: MOITO("presentacion-de-cuando-seas-feliz-golpea-tu-primero-de-tatiana-ebuleac_259"), note: "The Moldovan author of El verano en que mi madre tuvo los ojos verdes." },
+  { id: "vilas", cat: "literature", t: "Manuel Vilas: Zeta", who: "Author presentation", v: V.moito, dates: [["2026-10-14", "19:00"]], pick: 4, price: "free", src: MOITO("presentacion-de-zeta-de-manuel-vilas_267"), note: "New novel from the author of Ordesa." },
+  { id: "esperon", cat: "literature", t: "Jorge Esperón: No llegará sola", who: "Book presentation", v: "Biblioteca Os Rosales", dates: [["2026-10-16", "18:30"]], pick: 2, price: "free", src: CITY("presentacion-do-libro-no-llegara-sola-de-jorge-esperon-na-biblioteca-os-rosales/suceso/1453927993985"), note: "" },
+  { id: "sanchez-andrade", cat: "literature", t: "Cristina Sánchez-Andrade: Vida insecta", who: "Poetry (La Bella Varsovia)", v: V.moito, dates: [["2026-10-16", "19:00"]], pick: 3, price: "free", src: MOITO("presentacion-de-vida-insecta-de-cristina-sanchez-andrade_274"), note: "" },
+  { id: "timiraos", cat: "literature", t: "María Timiraos: No me rompí del todo", who: "Book presentation", v: "Biblioteca Fórum Metropolitano", dates: [["2026-10-19", "19:00"]], pick: 2, price: "free", src: CITY("lunsdeencontros-presentacion-del-libro-no-me-rompi-del-todo-de/suceso/1453928678471"), note: "" },
+  { id: "moito-clubs", cat: "literature", t: "Reading clubs at Moito Conto", who: "Letras Salvaxes (literature and nature) · Palabras Subterráneas · Doutras Bocas (poetry)", v: V.moito, dates: [["2026-10-21", "19:00"], ["2026-10-26", "19:00"], ["2026-11-04", "19:00"], ["2026-11-11", "19:00"], ["2026-12-02", "19:00"]], pick: 2, price: "", src: MOITO("club-de-lectura-de-literatura-e-natureza-letras-salvaxes_270"), note: "Ongoing groups; ask the shop about joining." },
+  { id: "santome", cat: "literature", t: "Cecilia F. Santomé: Boundaries road", who: "Author presentation", v: V.moito, dates: [["2026-10-28", "19:00"]], pick: 3, price: "free", src: MOITO("presentacion-de-boundaries-road-de-cecilia-f-santome_282"), note: "" },
+  { id: "borja-gonzalez", cat: "literature", t: "Borja González: La reina del otoño", who: "Graphic novel (Reservoir Books)", v: V.moito, dates: [["2026-10-29", "19:00"]], pick: 2, price: "free", src: MOITO("presentacion-de-la-reina-del-otono-de-borja-gonzalez_283"), note: "" },
+  { id: "cortes", cat: "literature", t: "Rodrigo Cortés: Hija del cielo", who: "Novel (Mondadori) · author presentation", v: V.moito, dates: [["2026-11-05", "19:00"]], pick: 3, price: "free", src: MOITO("presentacion-de-hija-del-cielo-de-rodrigo-cortes_260"), note: "Novelist and film director (Buried, Red Lights)." },
+  { id: "parga", cat: "literature", t: "Lydia Parga: Mírame cuando me mientas", who: "Book presentation", v: "Biblioteca Fórum Metropolitano", dates: [["2026-11-09", "19:00"]], pick: 2, price: "free", src: CITY("lunsdeencontros-presentacion-do-libro-mirame-cuando-me-mientas/suceso/1453925486708"), note: "" },
+  { id: "vida-relato", cat: "literature", t: "Talk: Cuando una vida se convierte en relato", who: "When a life becomes a story", v: "Biblioteca Fórum Metropolitano", dates: [["2026-11-12", "19:00"]], pick: 2, price: "free", src: CITY("charla-cuando-una-vida-se-convierte-en-relato/suceso/1453926424859"), note: "" },
+  { id: "fernandez-mallo", cat: "literature", t: "Agustín Fernández Mallo: El ángel de la Inteligencia Artificial", who: "Galaxia Gutenberg · author presentation", v: V.moito, dates: [["2026-12-01", "19:00"]], pick: 5, price: "free", src: MOITO("presentacion-de-el-angel-de-la-inteligencia-artificial-de-agustin-fernandez-mallo_272"), note: "The Coruña-born physicist and novelist of the Nocilla trilogy." },
+  { id: "bergareche", cat: "literature", t: "Jacobo Bergareche: Tío Grande", who: "Libros del Asteroide · author presentation", v: V.moito, dates: [["2026-12-03", "19:00"]], pick: 3, price: "free", src: MOITO("presentacion-de-tio-grande-de-jacobo-bergareche-_273"), note: "" },
+
+  // Architecture: Semana da Arquitectura 2026, "Coruña brutalista"
+  { id: "arq-mesa", cat: "architecture", t: "Round table: O legado brutalista, then a talk by Federico López Silvestre", who: "Andrés Fernández-Albalat Ruiz, Jorge Meijide Tomás, Luz Paz Agras, Fernando Agrasar Quiroga", v: "COAG A Coruña, Federico Tapia 64", dates: [["2026-10-08", "17:00"]], pick: 3, price: "free", src: S.arqProg, note: "López Silvestre's talk follows at 19:00." },
+  { id: "arq-oceano", cat: "architecture", t: "Guided visit: the Oceanographic Institute building", who: "Semana da Arquitectura", v: "Starts at Aula Náutica UDC, Dique de Abrigo", dates: [["2026-10-09", "13:00"]], pick: 3, price: "free", reg: "semanadaarquitectura2026@coruna.gal", src: S.arqProg, note: "Max 35 people. Bring a hard hat." },
+  { id: "arq-expo-visit", cat: "architecture", t: "Guided visit: Coruña brutalista exhibition", who: "Semana da Arquitectura", v: "Palacio Municipal de María Pita", dates: [["2026-10-09", "18:00"]], pick: 3, price: "free", src: S.arqProg, note: "Followed at 19:00 by a talk with Arturo and José Antonio Franco Taboada in the Salón Real." },
+  { id: "arq-juanflorez", cat: "architecture", t: "Guided walk: brutalism around Juan Flórez, with views from Torre Costa Rica", who: "Semana da Arquitectura", v: "Starts at Iglesia de San Pablo", dates: [["2026-10-10", "11:00"], ["2026-10-11", "11:00"]], pick: 4, price: "free", reg: "semanadaarquitectura2026@coruna.gal", src: S.arqProg, note: "Max 25 people. Also Sun 11 Oct at 19:30." },
+  { id: "arq-gransol", cat: "architecture", t: "Guided visit: Lonxa do Gran Sol fish market", who: "Semana da Arquitectura", v: "Starts at Muro do Porto, Palloza entrance", dates: [["2026-10-10", "13:00"]], pick: 3, price: "free", reg: "semanadaarquitectura2026@coruna.gal", src: S.arqProg, note: "Max 25 people." },
+
+  // Science & ideas
+  { id: "humboldt-leitner", cat: "science", t: "Humboldt's instruments and his methods of calculation", who: "Ulrike Leitner, Berlin-Brandenburg Academy of Sciences", v: "MUNCYT Coruña", dates: [["2026-10-22", ""]], pick: 2, price: "", src: S.humboldt, tbc: "Time and admission", note: "Lecture series on the exhibition Los instrumentos de Humboldt." },
+  { id: "humboldt-ette", cat: "science", t: "Alexander von Humboldt and Humboldtian science: past, present, future", who: "Ottmar Ette, Berlin-Brandenburg Academy of Sciences", v: "MUNCYT Coruña", dates: [["2026-11-12", ""]], pick: 3, price: "", src: S.humboldt, tbc: "Time and admission", note: "Lecture series on the exhibition Los instrumentos de Humboldt." },
+
+  // Chess
+  { id: "erlac-final", cat: "chess", t: "Gran final ERLAC", who: "Circuito Diputación da Coruña", v: "A Coruña", dates: [["2026-10-12", ""]], pick: 2, price: "", src: S.sande, tbc: "Only a tournament calendar lists this; venue, format and entry rules unknown", note: "Earlier ERLAC tournaments were open only to players registered with the Galician federation." },
+  { id: "liga-xdm", cat: "chess", t: "VII Liga XDM por equipos", who: "Team league", v: "A Coruña", dates: [["2026-10-17", ""]], pick: 2, price: "", src: S.sande, tbc: "Only a tournament calendar lists this; venue and entry unknown", note: "" },
+  { id: "nadal-coruna", cat: "chess", t: "LXXVIII Torneo de Nadal Coruña", who: "The city's Christmas chess tournament, 78th edition", v: "A Coruña", dates: [["2026-12-20", ""]], pick: 3, price: "", src: S.sande, tbc: "Only a tournament calendar lists this; venue, format and registration unknown", note: "" },
+
+  // Other music
+  { id: "peon", cat: "music", t: "Mercedes Peón + Clara Peya", who: "Ciclo Tándem", v: V.colon, dates: [["2026-10-18", "20:00"]], pick: 3, price: "€4–8", src: S.tandem, buy: AQ("conciertos/241-teatro-colon/x3ammasv-ciclo-tandem-mercedes-peon-2b-clara-peya"), note: "An acoustic set with other women musicians." },
+  { id: "pedreira", cat: "music", t: "A Pedreira + Beautify Junkyards", who: "Ciclo Tándem", v: V.colon, dates: [["2026-10-25", "20:00"]], pick: 2, price: "€4–8", src: S.tandem, buy: AQ("default_category/241-teatro-colon/x3ammbcf-ciclo-tandem-a-pedreira-2b-beautify-junk-yards"), note: "" },
+  { id: "drexler", cat: "music", t: "Jorge Drexler", who: "Taracá tour", v: V.opera, dates: [["2026-11-21", "21:00"]], pick: 2, price: "", soldOut: true, src: PAL("jorge-drexler"), buy: AQ("conciertos_pop/115-palacio-de-la-opera/x3akk26z-jorge-drexler"), note: "" },
+  { id: "adufeiras", cat: "music", t: "Xabier Díaz & Adufeiras de Salitre: Axúdame a sentir", who: "Galician traditional music", v: V.colon, dates: [["2026-12-27", "19:00"]], pick: 2, price: "€18–22", src: CITY("xabier-diaz-adufeiras-de-salitre-axudame-a-sentir/suceso/1453922888723"), buy: AQ("conciertos/241-teatro-colon/x3am6gj7-xabier-diaz-26-adufeiras-de-salitre"), note: "" }
+];
+
+const EXHIBITS = [
+  { id: "brutalista", cat: "architecture", t: "Coruña brutalista", who: "25 brutalist buildings in the city, from the Trébol and Costa Rica towers to churches, schools and faculties", v: "Palacio Municipal de María Pita", from: "2026-10-05", to: "2026-11-01", pick: 4, src: S.arqNews, note: "Free. Centre of the 2026 Semana da Arquitectura." },
+  { id: "mejuto", cat: "architecture", t: "Vítor Mejuto. Coruña ciudad", who: "An artist's portrait of the city's buildings, from heritage to everyday vernacular details", v: "Sede Afundación, Cantón Grande", from: "2026-10-14", to: "2027-01-09", pick: 3, src: S.mejuto, note: "Free. Mon–Fri 17:30–20:30; Sat and holidays 12:00–14:00 and 17:30–20:30; closed Sun. Guided opening visit 14 Oct 19:00 (sign-up on the page)." },
+  { id: "habana", t: "Habana Mater. 2003–2023", who: "Luis Gabú", v: "Museo de Belas Artes", from: "2026-05-15", to: "2026-10-31", pick: 3, src: S.mbacHabana, note: "Free guided visits Tuesdays 13, 20, 27 Oct." },
+  { id: "bosco", t: "El Bosco y Bruegel. Un viaje a mundos fantásticos", who: "With the Museum Boijmans Van Beuningen, Rotterdam", v: "Fundación Barrié", from: "2026-10-23", to: "2027-01-24", pick: 5, src: S.barrieBosco, note: "Free. Daily 11:00–14:00 and 17:00–20:00, holidays included." },
+  { id: "llorens", t: "Francisco Llorens (1874–1948)", who: "Permanent display", v: "Fundación Barrié", from: "2026-10-24", to: "2030-12-31", pick: 2, src: S.barrieLlorens, note: "Reopens 24 Oct after closure.", reopen: true },
+  { id: "seoane", t: "Seoane reencontrado. Óleos 1945–1977", who: "55 oils from the foundation's collection, 38 never shown before", v: "Fundación Luis Seoane", from: "2026-05-14", to: "2027-05-14", pick: 3, src: S.seoane, note: "For the foundation's 30th anniversary." }
+];
+
+/* ---------- profile layer ----------
+   fit: why this listing connects to the reader's documented tastes (adds FIT_BONUS to its score).
+   warn: a reason to temper expectations. img: key into IMAGES. */
+const FIT_BONUS = 3;
+const PROFILE = {
+  "tosca": { img: "tosca", fit: "You judge opera as drama first and count tears as the test; La Bohème did it in Seattle. Carlos Álvarez is one of the great singing actors, and Scarpia is his signature role." },
+  "osg-reiss": { img: "strauss", fit: "Late Strauss, the direct heir of the Tristan harmony you have written about at length." },
+  "osg-rosen": { img: "strausswoche", fit: "Strauss's homage to Mozart, written in the language of Tristan." },
+  "osg-egarr": { img: "haydn", fit: "Recalls the Olari Elts Haydn you loved in Seattle for its accents and detail. Egarr works in the same period-informed way." },
+  "osg-scheh": { img: "rimsky", fit: "From the Russian repertoire you keep coming back to." },
+  "osg-falla": { img: "falla" },
+  "caamano": { img: "caamano", fit: "A key Galician-language novelist. Her Circe retells the Odyssey through Penelope and Circe, myth read from the women's side." },
+  "picasso": { img: "picasso", fit: "Picasso spent his teens in A Coruña (1891–95). You wrote about not quite believing you were standing before his Violin and Grapes." },
+  "espejo": { fit: "Tarkovsky's memory film, with his father Arseny's poems read over it: Russian poetry, which you found your way back to through Blok and Akhmatova." },
+  "desconquista": { fit: "Ron Lalá write in Golden Age-style verse, dense with Spanish wordplay. A treat for someone who loves languages." },
+  "escandalo": { fit: "Estudo Momento is one of the leading Galician companies working now." },
+  "peon": { fit: "Mercedes Peón takes Galician traditional song apart and rebuilds it." },
+  "adufeiras": { fit: "Galician pandeireta song, the oral tradition behind much of the region's music." },
+  "kiev-swan": { warn: "Touring company. You have written about corps de ballet that stomp; expect that here." },
+  "tibuleac": { fit: "Born in Soviet Moldova and raised in Russian, she writes in Romanian and lives in Paris: a writer between languages." },
+  "candia": { fit: "A Coruña novelist. Her Azucre told the story of Galicians shipped to Cuba as indentured labourers in 1854." },
+  "sanchez-andrade": { fit: "Santiago-born novelist and poet; her fiction is steeped in rural Galicia." },
+  "fernandez-mallo": { fit: "A Coruña writer on artificial intelligence, the subject of your own research on LLM language." },
+  "op-wozzeck": { fit: "Opera as drama at its most uncompromising, and the heir to the Tristan harmony you love." },
+  "op-talk-tosca": { fit: "A primer the day before the Tosca you marked as liked." },
+  "humboldt-ette": { fit: "Ette is a literary scholar of travel writing who writes about literatures and lives that move between languages." },
+  "brutalista": { fit: "Post-war concrete modernism, the idiom of late Soviet cities like Novosibirsk, seen here in Coruña's own towers and campuses." },
+  "bosco": { img: "bosco", fit: "You found the Dutch and Flemish rooms at the Met overwhelming. This is that school." },
+  "seoane": { img: "seoane", fit: "Galicia's great exiled painter, who spent decades in Buenos Aires: the émigré life you have read in Berberova, Herzen and Nabokov." },
+};
+const IMAGES = {
+  tosca: { src: "img/tosca.jpg", alt: "Adolfo Hohenstein's 1899 poster for Tosca", credit: "Adolfo Hohenstein, Tosca poster, 1899. Public domain." },
+  bosco: { src: "img/bosco.jpg", alt: "Central panel of Bosch's Garden of Earthly Delights", credit: "Hieronymus Bosch, The Garden of Earthly Delights (detail), Museo del Prado. Public domain." },
+  strauss: { src: "img/strauss.jpg", alt: "Portrait of Richard Strauss by Max Liebermann", credit: "Max Liebermann, Richard Strauss, 1918. Public domain." },
+  strausswoche: { src: "img/strausswoche.jpg", alt: "Ludwig Hohlwein's 1910 Richard Strauss festival poster", credit: "Ludwig Hohlwein, Richard-Strauss-Woche poster, 1910. Public domain." },
+  haydn: { src: "img/haydn.jpg", alt: "Portrait of Joseph Haydn by Thomas Hardy", credit: "Thomas Hardy, Joseph Haydn, 1791. Public domain." },
+  rimsky: { src: "img/rimsky.jpg", alt: "Portrait of Rimsky-Korsakov by Valentin Serov", credit: "Valentin Serov, Nikolai Rimsky-Korsakov, 1898. Public domain." },
+  falla: { src: "img/falla.jpg", alt: "Manuel de Falla with a walking stick", credit: "Manuel de Falla, Archivo Manuel de Falla. Public domain." },
+  caamano: { src: "img/caamano.jpg", alt: "Begoña Caamaño", credit: "Begoña Caamaño, photo by CoroRP, CC BY-SA 4.0." },
+  picasso: { src: "img/picasso.jpg", alt: "Casa Museo Picasso in A Coruña", credit: "Casa Museo Picasso, A Coruña, photo by GenclerbirligiSporKulubu, CC BY-SA 4.0." },
+  seoane: { src: "img/seoane.jpg", alt: "Luis Seoane with friends in Argentina, 1936", credit: "Luis Seoane with Norberto Frontini and Elena Ruiz, Argentina, 1936. Public domain." },
+  rosalia: { src: "img/rosalia.jpg", alt: "Teatro Rosalía de Castro", credit: "Teatro Rosalía de Castro, photo by Ajuanta, CC0." },
+  colon: { src: "img/colon.jpg", alt: "Teatro Colón, A Coruña", credit: "Teatro Colón, photo by Ajuanta, CC0." },
+  palacio: { src: "img/palacio.jpg", alt: "Palacio de la Ópera, A Coruña", credit: "Palacio de la Ópera, photo by Zarateman, CC0." }
+};
+/* demand: listings likely to sell out, with the reason. Editorial judgement from venue
+   size, price and draw, not live ticket availability. */
+const DEMAND = {
+  "entusiasmo": "Max award-winning play, two nights only, cheapest seats €10.",
+  "tibuleac": "A small bookshop room. Arrive early or ask the shop to keep a seat.",
+  "fernandez-mallo": "A small bookshop room and a hometown author. Arrive early.",
+};
+const VENUE_IMG = { [V.opera]: "palacio", [V.rosalia]: "rosalia", [V.colon]: "colon" };
+const prof = id => PROFILE[id] || {};
+const imgFor = (id, venue, fallback) => IMAGES[prof(id).img] || (fallback ? IMAGES[VENUE_IMG[venue]] : null);
+const imgTag = (im, cls) => `<img class="${cls}" src="${im.src}" alt="${esc(im.alt)}" loading="lazy">`;
+
+/* ---------- state ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("cl:" + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("cl:" + k, JSON.stringify(v)); } catch {} }
+};
+const validView = v => ["week", "month", "season"].includes(v);
+const hashView = location.hash.slice(1);
+let view = validView(hashView) ? hashView : store.get("view", "week");
+if (!validView(view)) view = "week";
+let weights = Object.assign({}, DEFAULT_W, store.get("weights", {}));
+let stars = new Set(store.get("stars", []));
+let onlyStarred = store.get("onlyStarred", false);
+let hideLow = store.get("hideLow", false);
+let typeFilter = new Set((store.get("typeFilter", []) || []).filter(c => c in CATS));
+const typeOk = cat => !typeFilter.size || typeFilter.has(cat);
+const openIds = new Set();
+function toggleOpen(id, node, btn) {
+  if (!mobileMQ.matches) return;
+  openIds.has(id) ? openIds.delete(id) : openIds.add(id);
+  node.classList.toggle("open", openIds.has(id));
+  btn.setAttribute("aria-expanded", openIds.has(id));
+}
+const mobileMQ = window.matchMedia("(max-width: 640px)");
+
+/* ---------- dates ---------- */
+const DAY = 864e5;
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const realToday = startOfDay(new Date());
+const TODAY = realToday < parse(COMPILED) ? parse(COMPILED) : realToday;
+const diff = (a, b) => Math.round((startOfDay(b) - startOfDay(a)) / DAY);
+const add = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const fmtDay = d => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+const fmtShort = d => d.toLocaleDateString("en-GB", d.getFullYear() === TODAY.getFullYear() ? { day: "numeric", month: "short" } : { day: "numeric", month: "short", year: "numeric" });
+const fmtWd = d => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric" });
+const rel = n => n === 0 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`;
+const mondayOf = d => add(d, -((d.getDay() + 6) % 7));
+
+function windowFor(v) {
+  if (v === "week") return [TODAY, add(TODAY, 6)];
+  if (v === "month") return [TODAY, add(TODAY, 30)];
+  let last = add(TODAY, 30);
+  for (const e of EVENTS) for (const [d] of e.dates) { const x = parse(d); if (x > last) last = x; }
+  for (const x of EXHIBITS) { const f = parse(x.from); if (f > last) last = f; }
+  return [TODAY, last];
+}
+
+/* ---------- scoring ---------- */
+const exCat = "art";
+function raw(cat, pick, id) {
+  const w = weights[cat] ?? 0, v = voteOf(id);
+  if (v === -1) return 0;
+  return w * pick + (w && prof(id).fit ? FIT_BONUS : 0) + (w && v === 1 ? LIKE_BONUS : 0);
+}
+function tier(score) { return score >= 13 ? "must" : score >= 7 ? "rec" : score >= 3 ? "" : "low"; }
+function urgency(daysAway) { return 1 + 0.8 * Math.exp(-daysAway / 6); }
+
+/* ---------- build ---------- */
+function entries([from, to]) {
+  const out = [];
+  for (const e of EVENTS) {
+    if ((weights[e.cat] ?? 0) === 0) continue;
+    const occ = e.dates.map(([d, t]) => ({ d: parse(d), t })).filter(o => o.d >= from && o.d <= to);
+    if (!occ.length) continue;
+    const s = raw(e.cat, e.pick, e.id);
+    out.push({ e, date: occ[0].d, time: occ[0].t, also: occ.slice(1), score: s, tier: tier(s), cat: e.cat });
+  }
+  for (const x of EXHIBITS) {
+    const xc = x.cat || exCat;
+    if ((weights[xc] ?? 0) === 0) continue;
+    const f = parse(x.from);
+    if (f > from && f <= to) {
+      const s = raw(xc, x.pick, x.id);
+      out.push({ e: { ...x, cat: xc, dates: [] }, date: f, time: "", also: [], score: s, tier: tier(s), cat: xc, opening: x.reopen ? "Reopens" : "Opens" });
+    }
+  }
+  return out
+    .filter(r => !onlyStarred || stars.has(r.e.id))
+    .filter(r => showDismissed || voteOf(r.e.id) !== -1)
+    .filter(r => !hideLow || r.tier !== "low")
+    .filter(r => typeOk(r.cat))
+    .sort((a, b) => a.date - b.date || (a.time || "99").localeCompare(b.time || "99") || b.score - a.score);
+}
+
+const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function starBtn(id, title) {
+  const b = el("button", "star", "★");
+  b.type = "button";
+  b.setAttribute("aria-pressed", stars.has(id));
+  b.setAttribute("aria-label", (stars.has(id) ? "Unstar " : "Star ") + title);
+  b.addEventListener("click", () => {
+    stars.has(id) ? stars.delete(id) : stars.add(id);
+    store.set("stars", [...stars]);
+    render();
+  });
+  return b;
+}
+
+const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function buyUrl(e, d) { return !e.buy ? null : typeof e.buy === "string" ? e.buy : e.buy[isoOf(d)] || null; }
+function linksFor(e, d) {
+  const box = el("div", "links");
+  const u = buyUrl(e, d);
+  if (u && !e.soldOut) box.insertAdjacentHTML("beforeend", `<a class="buy" href="${u}" target="_blank" rel="noopener">Buy tickets</a>`);
+  if (u && e.soldOut) box.insertAdjacentHTML("beforeend", `<a class="buy secondary" href="${u}" target="_blank" rel="noopener">Check for returns</a>`);
+  const vt = !u && !e.soldOut && e.tix && VENUE_TIX[e.v];
+  if (vt) box.insertAdjacentHTML("beforeend", `<a class="buy secondary" href="${vt}" target="_blank" rel="noopener" title="Exact ticket page not found yet; this is the venue's list on Ataquilla">Tickets: ${esc(e.v.replace("Teatro ", ""))} list</a>`);
+  const lbl = !u && e.tix && !vt ? "Details and tickets" : "Details";
+  box.insertAdjacentHTML("beforeend", `<a class="${!u && e.tix && !vt ? "buy secondary" : "more"}" href="${e.src}" target="_blank" rel="noopener">${lbl}</a>`);
+  return box;
+}
+
+function renderEvent(r) {
+  const { e } = r;
+  const row = el("article", "ev " + r.tier);
+  row.id = "ev-" + e.id;
+  row.appendChild(el("div", "time", esc(r.time || "")));
+  const body = el("div", "body");
+  const tierLabel = r.tier === "must" ? '<span class="tier must">Don\'t miss</span>' : r.tier === "rec" ? '<span class="tier rec">Recommended</span>' : "";
+  body.appendChild(el("div", "tagline", `<span class="cat">${CATS[r.cat]}</span>${tierLabel}${DEMAND[e.id] ? '<span class="tier book-tag">Book early</span>' : ""}${prof(e.id).fit ? '<span class="fy">For you</span>' : ""}<span class="venue">${esc(e.v)}</span>`));
+  if (openIds.has(e.id)) row.classList.add("open");
+  const tb = el("button", "ttl", (r.opening ? `${r.opening}: ` : "") + esc(e.t));
+  tb.type = "button";
+  tb.setAttribute("aria-expanded", openIds.has(e.id));
+  tb.addEventListener("click", () => toggleOpen(e.id, row, tb));
+  body.appendChild(tb);
+  if (e.who) body.appendChild(el("div", "who", esc(e.who)));
+  if (e.note) body.appendChild(el("div", "note", esc(e.note)));
+  const pf = prof(e.id);
+  if (pf.fit) body.appendChild(el("div", "fit", `<b>For you</b> ${esc(pf.fit)}`));
+  if (pf.warn) body.appendChild(el("div", "warn", `<b>Caution</b> ${esc(pf.warn)}`));
+  if (DEMAND[e.id]) body.appendChild(el("div", "warn", `<b>Book early</b> ${esc(DEMAND[e.id])}`));
+  const meta = [];
+  if (e.soldOut) meta.push('<span class="tbc">Sold out</span>');
+  if (r.also.length) meta.push("Also " + r.also.map(o => { const u = buyUrl(e, o.d), lbl = esc(fmtWd(o.d) + (o.t ? " " + o.t : "")); return u && !e.soldOut ? `<a href="${u}" target="_blank" rel="noopener">${lbl}</a>` : lbl; }).join(", "));
+  if (r.opening) meta.push(`Until ${fmtShort(parse(e.to))}`);
+  if (e.price) meta.push(esc(e.price));
+  if (e.reg) meta.push(`Book by email: <span class="reg">${esc(e.reg)}</span>`);
+  if (e.tbc) meta.push(`<span class="tbc">To confirm: ${esc(e.tbc)}</span>`);
+  body.appendChild(el("div", "meta", meta.map(m => `<span>${m}</span>`).join("")));
+  body.appendChild(linksFor(e, r.date));
+  if (FB.enabled) body.appendChild(fbControls(e.id, e.t, r.cat, e.v));
+  if (voteOf(e.id) === -1) row.classList.add("dismissed");
+  row.appendChild(body);
+  const im = imgFor(e.id, e.v, false);
+  if (im && r.tier !== "low") { row.classList.add("has-img"); row.insertAdjacentHTML("beforeend", imgTag(im, "thumb")); }
+  row.appendChild(starBtn(e.id, e.t));
+  return row;
+}
+
+function jumpTo(id) {
+  let row = document.getElementById("ev-" + id);
+  if (!row && view !== "season") { view = "season"; render(); row = document.getElementById("ev-" + id); }
+  if (!row) return;
+  openIds.add(id);
+  row.classList.add("open");
+  row.querySelector("button.ttl")?.setAttribute("aria-expanded", "true");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  row.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+  row.classList.remove("flash");
+  void row.offsetWidth;
+  row.classList.add("flash");
+  clearTimeout(row._flashT);
+  row._flashT = setTimeout(() => row.classList.remove("flash"), 1700);
+  row.querySelector("button.ttl")?.focus({ preventScroll: true });
+}
+
+/* ---------- feedback (owner only, stored in the artifact's db) ---------- */
+const LIKE_BONUS = 4;
+const FB = { enabled: false, db: null, map: new Map(), alerts: [] };
+const ALERT_STATUS = { on_sale: "On sale now", onsale_soon: "On sale soon", low: "Limited availability", sold_out: "Sold out", announced: "Just announced" };
+let showDismissed = false;
+const voteOf = id => FB.map.get(id)?.vote ?? 0;
+
+/* ---------- live data: events and exhibitions from the artifact db ----------
+   The inline EVENTS / EXHIBITS arrays are a snapshot used when the db is unavailable
+   (for example a signed-out visitor). When the db answers, its documents replace them. */
+function applyDocs(target, docs, isEvent) {
+  const items = docs.map(d => {
+    const x = { ...d };
+    if (isEvent) x.dates = (x.dates || []).map(o => Array.isArray(o) ? o : [o.d, o.t || ""]);
+    if (x.fit || x.warn || x.img) PROFILE[x.id] = { ...(PROFILE[x.id] || {}), ...(x.fit ? { fit: x.fit } : {}), ...(x.warn ? { warn: x.warn } : {}), ...(x.img ? { img: x.img } : {}) };
+    if (x.demand) DEMAND[x.id] = x.demand; else delete DEMAND[x.id];
+    return x;
+  });
+  target.splice(0, target.length, ...items);
+  ensureCats();
+}
+let liveUpdated = null;
+async function initData() {
+  const db = await window.claude?.use?.("db");
+  if (!db) return;
+  const note = (docs) => {
+    for (const d of docs) if (d.updatedAt && (!liveUpdated || d.updatedAt > liveUpdated)) liveUpdated = d.updatedAt;
+    if (liveUpdated) document.getElementById("compiled").textContent = "live listings, last change " + fmtShort(new Date(liveUpdated));
+  };
+  db.collection("events").onSnapshot(snap => {
+    if (snap.empty) return;
+    const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    applyDocs(EVENTS, docs, true); note(docs); render();
+  }, () => {});
+  db.collection("exhibits").onSnapshot(snap => {
+    if (snap.empty) return;
+    const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    applyDocs(EXHIBITS, docs, false); note(docs); render();
+  }, () => {});
+}
+
+async function initFeedback() {
+  const user = await window.claude?.use?.("user");
+  if (!(await user?.isOwner())) return;
+  const db = await window.claude.use("db");
+  if (!db) return;
+  FB.db = db;
+  FB.enabled = true;
+  document.getElementById("dismissed-wrap").hidden = false;
+  render();
+  db.collection("alerts").onSnapshot(snap => {
+    FB.alerts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+  }, () => { FB.alerts = []; render(); });
+  db.doc("settings/profile").onSnapshot(snap => {
+    if (!snap.exists) return;
+    PROF = JSON.parse(JSON.stringify(snap.data()));
+    applyProfile(); renderPrefs(); render();
+  }, () => {});
+  db.collection("feedback").onSnapshot(snap => {
+    FB.map = new Map(snap.docs.map(d => [d.id, d.data()]));
+    const n = [...FB.map.values()].filter(f => f.vote === -1).length;
+    document.getElementById("dismissed-n").textContent = n ? `(${n})` : "";
+    render();
+  }, () => { FB.enabled = false; document.getElementById("dismissed-wrap").hidden = true; render(); });
+}
+
+async function saveFeedback(id, patch, meta, statusEl) {
+  const prev = FB.map.get(id) || {};
+  const next = { ...prev, ...meta, ...patch, updatedAt: new Date().toISOString() };
+  if (!next.vote && !next.note) {
+    try { await FB.db.doc("feedback/" + id).delete(); } catch (e) { statusEl.textContent = "Could not save. Try again."; }
+    return;
+  }
+  statusEl.textContent = "Saving…";
+  try {
+    await FB.db.doc("feedback/" + id).set(next);
+    statusEl.textContent = "Saved";
+  } catch (e) {
+    statusEl.textContent = e?.code === "quota_exceeded" ? "Feedback storage is full." : "Could not save. Try again.";
+  }
+}
+
+function fbControls(id, title, cat, venue) {
+  const f = FB.map.get(id) || {};
+  const meta = { title, cat, venue };
+  const box = el("div", "fb");
+  const status = el("span", "fb-status");
+  status.setAttribute("role", "status");
+  const mk = (label, val) => {
+    const b = el("button", "fb-btn" + (val === -1 ? " down" : ""), label);
+    b.type = "button";
+    b.setAttribute("aria-pressed", f.vote === val);
+    b.addEventListener("click", () => saveFeedback(id, { vote: f.vote === val ? 0 : val }, meta, status));
+    return b;
+  };
+  box.appendChild(mk("More like this", 1));
+  box.appendChild(mk("Not for me", -1));
+  const nb = el("button", "fb-btn", f.note ? "Edit note" : "Add note");
+  nb.type = "button";
+  box.appendChild(nb);
+  box.appendChild(status);
+  if (f.note) box.appendChild(el("p", "fb-note", esc(f.note)));
+  const form = el("form", "fb-form");
+  form.hidden = true;
+  const ta = document.createElement("textarea");
+  ta.id = "note-" + id;
+  ta.rows = 3;
+  ta.value = f.note || "";
+  ta.setAttribute("aria-label", "Note about " + title);
+  ta.placeholder = "What should Claude know? e.g. why this is or isn't for you";
+  const save = el("button", "fb-btn", "Save note");
+  save.type = "submit";
+  form.append(ta, save);
+  form.addEventListener("submit", ev => { ev.preventDefault(); saveFeedback(id, { note: ta.value.trim() }, meta, status); });
+  nb.addEventListener("click", () => { form.hidden = !form.hidden; if (!form.hidden) ta.focus(); });
+  box.appendChild(form);
+  return box;
+}
+
+function renderBook() {
+  const sec = document.getElementById("book-sec"), box = document.getElementById("book");
+  box.innerHTML = "";
+  const items = entries(windowFor("season")).filter(r => DEMAND[r.e.id] && voteOf(r.e.id) !== -1);
+  const alerts = FB.alerts
+    .filter(a => !a.dismissed && (!a.date || parse(String(a.date).slice(0, 10)) >= TODAY))
+    .sort((a, b) => String(b.foundAt || "").localeCompare(String(a.foundAt || "")));
+  sec.hidden = !items.length && !alerts.length;
+  for (const a of alerts) {
+    const li = el("li", null);
+    const card = el("div", "book-item alert");
+    const fresh = a.foundAt && (Date.now() - Date.parse(a.foundAt)) < 3 * DAY;
+    const d = a.date ? parse(String(a.date).slice(0, 10)) : null;
+    const status = ALERT_STATUS[a.status] || "Alert";
+    const onsale = a.onsaleDate ? ` · tickets from ${fmtShort(parse(String(a.onsaleDate).slice(0, 10)))}` : "";
+    card.innerHTML = `<span class="when">${fresh ? '<b class="new">New</b> ' : ""}${esc(status)}${onsale}${d ? " · " + fmtDay(d) : ""}</span>`
+      + `<span class="ttl">${esc(a.title || "")}</span>`
+      + `<span class="why">${esc([a.venue, a.reason].filter(Boolean).join(" · "))}</span>`;
+    const row = el("span", "alert-actions");
+    if (/^https?:\/\//.test(a.url || "")) {
+      const link = el("a", null, "Tickets / source");
+      link.href = a.url; link.target = "_blank"; link.rel = "noopener";
+      row.appendChild(link);
+    }
+    const dis = el("button", "fb-btn", "Dismiss");
+    dis.type = "button";
+    dis.addEventListener("click", async () => {
+      const { id, ...body } = a;
+      try { await FB.db.doc("alerts/" + id).set({ ...body, dismissed: true }); } catch (e) { dis.textContent = "Could not dismiss"; }
+    });
+    row.appendChild(dis);
+    card.appendChild(row);
+    li.appendChild(card);
+    box.appendChild(li);
+  }
+  for (const r of items) {
+    const li = el("li", null);
+    const a = el("a", "book-item", `<span class="when">${fmtDay(r.date)} · ${rel(diff(TODAY, r.date))}</span><span class="ttl">${(r.opening ? r.opening + ": " : "") + esc(r.e.t)}</span><span class="why">${esc(DEMAND[r.e.id])}</span>`);
+    a.href = "#ev-" + r.e.id;
+    a.addEventListener("click", ev => { ev.preventDefault(); jumpTo(r.e.id); });
+    li.appendChild(a);
+    box.appendChild(li);
+  }
+}
+
+function renderListing(list, win) {
+  const main = document.getElementById("listing");
+  main.innerHTML = "";
+  if (!list.length) {
+    main.appendChild(el("p", "empty", onlyStarred ? "No starred events in this window. Star events with ★ to build a plan." : "Nothing matches in this window. Raise an interest level or switch to a longer view."));
+    return;
+  }
+  const byWeek = new Map();
+  for (const r of list) {
+    const k = mondayOf(r.date).getTime();
+    if (!byWeek.has(k)) byWeek.set(k, []);
+    byWeek.get(k).push(r);
+  }
+  for (const [k, rows] of byWeek) {
+    const sec = el("section", "week");
+    const mon = new Date(k);
+    const label = view === "week" ? `${fmtShort(win[0])} – ${fmtShort(win[1])}`
+      : diff(TODAY, mon) <= 0 ? "This week" : `Week of ${fmtShort(mon)}`;
+    sec.appendChild(el("h2", null, label));
+    const byDay = new Map();
+    for (const r of rows) {
+      const dk = r.date.getTime();
+      if (!byDay.has(dk)) byDay.set(dk, []);
+      byDay.get(dk).push(r);
+    }
+    for (const [dk, drows] of byDay) {
+      const d = new Date(dk), n = diff(TODAY, d);
+      const day = el("div", "day" + (n === 0 ? " today" : ""));
+      day.appendChild(el("div", "day-label", `<b>${fmtDay(d)}</b><span class="rel">${rel(n)}</span>`));
+      const evs = el("div", "events");
+      drows.forEach(r => evs.appendChild(renderEvent(r)));
+      day.appendChild(evs);
+      sec.appendChild(day);
+    }
+    main.appendChild(sec);
+  }
+}
+
+function renderPicks(list) {
+  const box = document.getElementById("picks");
+  box.innerHTML = "";
+  const n = view === "week" ? 3 : 4;
+  const ranked = list.filter(r => r.tier === "must" || r.tier === "rec")
+    .map(r => ({ r, s: r.score * urgency(diff(TODAY, r.date)) + (stars.has(r.e.id) ? 4 : 0) }))
+    .sort((a, b) => b.s - a.s).slice(0, n)
+    .sort((a, b) => a.r.date - b.r.date);
+  document.querySelector(".picks").hidden = !ranked.length;
+  for (const { r } of ranked) {
+    const p = el("a", "pick");
+    p.href = "#ev-" + r.e.id;
+    p.setAttribute("aria-label", `${r.e.t}: show details in the listing`);
+    p.addEventListener("click", ev => { ev.preventDefault(); jumpTo(r.e.id); });
+    const pim = imgFor(r.e.id, r.e.v, true);
+    if (pim) p.insertAdjacentHTML("beforeend", imgTag(pim, "pick-img"));
+    const days = diff(TODAY, r.date);
+    if (prof(r.e.id).fit) p.appendChild(el("div", "foryou", "For you"));
+    p.appendChild(el("div", "when", `${fmtDay(r.date)}${r.time ? " · " + r.time : ""} · ${rel(days)}`));
+    p.appendChild(el("div", "ttl", (r.opening ? r.opening + ": " : "") + esc(r.e.t)));
+    p.appendChild(el("div", "sub", `${CATS[r.cat]} · ${esc(r.e.v)}`));
+    box.appendChild(p);
+  }
+}
+
+function renderExhibits([from, to]) {
+  const box = document.getElementById("exhibits");
+  box.innerHTML = "";
+  const list = EXHIBITS.filter(x => parse(x.to) >= from && parse(x.from) <= to)
+    .filter(x => !onlyStarred || stars.has(x.id))
+    .filter(x => showDismissed || voteOf(x.id) !== -1)
+    .filter(x => (weights[x.cat || exCat] ?? 0) > 0 && typeOk(x.cat || exCat))
+    .sort((a, b) => b.pick - a.pick || parse(a.to) - parse(b.to));
+  if (!list.length) { box.appendChild(el("p", "empty", typeFilter.size ? "No exhibitions for the selected types." : "No exhibitions match.")); return; }
+  for (const x of list) {
+    const t = tier(raw(x.cat || exCat, x.pick, x.id));
+    const f = parse(x.from), e = parse(x.to);
+    const left = diff(TODAY, e), opensIn = diff(TODAY, f);
+    let run = opensIn > 0 ? `${x.reopen ? "Reopens" : "Opens"} ${fmtShort(f)}` : `Since ${fmtShort(f)}`;
+    run += e.getFullYear() >= 2030 ? " · permanent" : ` · until ${fmtShort(e)}`;
+    if (left <= 30 && opensIn <= 0) run += ` · <span class="closing">closes ${rel(left)}</span>`;
+    const item = el("div", "ex " + t + (openIds.has(x.id) ? " open" : ""));
+    const head = el("div", "ex-head");
+    const xb = el("button", "ttl", esc(x.t));
+    xb.type = "button";
+    xb.setAttribute("aria-expanded", openIds.has(x.id));
+    xb.addEventListener("click", () => toggleOpen(x.id, item, xb));
+    head.appendChild(xb);
+    head.appendChild(starBtn(x.id, x.t));
+    item.appendChild(head);
+    item.appendChild(el("div", "run", run));
+    item.appendChild(el("div", "sub ex-detail", esc([x.who, x.v].filter(Boolean).join(" · "))));
+    const xim = imgFor(x.id, x.v, false);
+    if (xim) item.insertAdjacentHTML("afterbegin", imgTag(xim, "ex-img"));
+    if (prof(x.id).fit) item.appendChild(el("div", "fit", `<b>For you</b> ${esc(prof(x.id).fit)}`));
+    if (x.note) item.appendChild(el("div", "sub ex-detail", esc(x.note)));
+    if (x.tbc) item.appendChild(el("div", "sub ex-detail", `<span class="tbc">To confirm: ${esc(x.tbc)}</span>`));
+    item.appendChild(el("div", "sub ex-detail", `<a href="${x.src}" target="_blank" rel="noopener">Exhibition page</a>`));
+    if (FB.enabled) { const f = fbControls(x.id, x.t, x.cat || exCat, x.v); f.classList.add("ex-detail"); item.appendChild(f); }
+    if (voteOf(x.id) === -1) item.classList.add("dismissed");
+    box.appendChild(item);
+  }
+}
+
+/* ---------- owner profile: editable interests, stored in db settings/profile ---------- */
+let PROF = null;
+const slug = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+function ensureCats() {
+  for (const e of [...EVENTS, ...EXHIBITS]) {
+    const c = e.cat;
+    if (c && !(c in CATS)) { CATS[c] = c.charAt(0).toUpperCase() + c.slice(1).replace(/[-_]/g, " "); if (weights[c] == null) weights[c] = PROF ? 1 : 2; }
+  }
+}
+function applyProfile() {
+  if (!PROF) return;
+  for (const k of Object.keys(CATS)) delete CATS[k];
+  for (const it of PROF.interests || []) { CATS[it.key] = it.label; weights[it.key] = it.level ?? 2; }
+  ensureCats();
+}
+async function saveProfile(statusEl) {
+  if (!FB.db || !PROF) return;
+  if (statusEl) statusEl.textContent = "Saving…";
+  try {
+    await FB.db.doc("settings/profile").set({ ...PROF, updatedAt: new Date().toISOString() });
+    if (statusEl) statusEl.textContent = "Saved";
+  } catch (e) { if (statusEl) statusEl.textContent = "Could not save. Try again."; }
+}
+function renderProfileEditor(box) {
+  box.className = "prefs editor";
+  const status = el("p", "fb-status", "");
+  status.setAttribute("role", "status");
+  box.appendChild(el("h3", "ed-h", "Your interests"));
+  box.appendChild(el("p", "prefs-note", "These drive the ranking here and tell the scans what to look for. Describe each interest in your own words; the more specific, the better the finds."));
+  const list = el("div", "int-list");
+  (PROF.interests || []).forEach((it, i) => {
+    const row = el("div", "int-row");
+    const lab = document.createElement("input");
+    lab.id = "int-label-" + it.key; lab.className = "int-label"; lab.value = it.label; lab.setAttribute("aria-label", "Interest name");
+    lab.addEventListener("change", () => { it.label = lab.value.trim() || it.label; saveProfile(status); applyProfile(); render(); });
+    const ab = document.createElement("input");
+    ab.id = "int-about-" + it.key; ab.className = "int-about"; ab.value = it.about || ""; ab.placeholder = "What specifically? e.g. composers, authors, kinds of events";
+    ab.setAttribute("aria-label", "Details for " + it.label);
+    ab.addEventListener("change", () => { it.about = ab.value.trim(); saveProfile(status); });
+    const seg = el("div", "seg");
+    seg.setAttribute("role", "group"); seg.setAttribute("aria-label", it.label + " level");
+    for (const [lbl, val] of LEVELS) {
+      const b = el("button", null, lbl); b.type = "button"; b.id = `lvl-${it.key}-${val}`;
+      b.setAttribute("aria-pressed", (it.level ?? 2) === val);
+      b.addEventListener("click", () => { it.level = val; saveProfile(status); applyProfile(); renderPrefs(); render(); });
+      seg.appendChild(b);
+    }
+    const rm = el("button", "linkish int-rm", "Remove"); rm.type = "button";
+    rm.addEventListener("click", () => { PROF.interests.splice(i, 1); saveProfile(status); applyProfile(); renderPrefs(); render(); });
+    row.append(lab, ab, seg, rm);
+    list.appendChild(row);
+  });
+  box.appendChild(list);
+  const add = el("form", "int-add");
+  const nl = document.createElement("input"); nl.id = "int-new-label"; nl.placeholder = "New interest, e.g. Astronomy"; nl.setAttribute("aria-label", "New interest name");
+  const na = document.createElement("input"); na.id = "int-new-about"; na.placeholder = "Details, e.g. observatory nights, talks on space"; na.setAttribute("aria-label", "New interest details");
+  const nb = el("button", "fb-btn", "Add interest"); nb.type = "submit";
+  add.append(nl, na, nb);
+  add.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const label = nl.value.trim(); if (!label) return;
+    let key = slug(label) || "interest"; while ((PROF.interests || []).some(x => x.key === key)) key += "-2";
+    (PROF.interests = PROF.interests || []).push({ key, label, about: na.value.trim(), level: 3 });
+    saveProfile(status); applyProfile(); renderPrefs(); render();
+  });
+  box.appendChild(add);
+  const mkArea = (id, title, hint, val, onSave, rows) => {
+    const wrap = el("div", "ed-field");
+    const l = el("label", null, esc(title)); l.setAttribute("for", id);
+    const ta = document.createElement("textarea"); ta.id = id; ta.rows = rows || 3; ta.value = val || ""; ta.placeholder = hint;
+    ta.addEventListener("change", () => { onSave(ta.value); saveProfile(status); });
+    wrap.append(l, ta); box.appendChild(wrap);
+  };
+  mkArea("prof-dislikes", "Not interested in (one per line)", "e.g. commercial pop concerts", (PROF.dislikes || []).join("\n"), v => { PROF.dislikes = v.split("\n").map(x => x.trim()).filter(Boolean); });
+  mkArea("prof-about", "About me (helps the scans find what fits you)", "Work, background, languages, anything that shapes your taste", PROF.about, v => { PROF.about = v.trim(); }, 4);
+  mkArea("prof-city", "Where", "City, and how far you'd travel", PROF.city, v => { PROF.city = v.trim(); }, 1);
+  box.appendChild(status);
+}
+
+function renderPrefs() {
+  const box = document.getElementById("prefs");
+  box.innerHTML = "";
+  if (PROF && FB.enabled) { renderProfileEditor(box); return; }
+  box.className = "prefs";
+  for (const [k, name] of Object.entries(CATS)) {
+    const row = el("div", "pref");
+    row.appendChild(el("span", null, name));
+    const seg = el("div", "seg");
+    seg.setAttribute("role", "group");
+    seg.setAttribute("aria-label", name + " interest");
+    for (const [lbl, val] of LEVELS) {
+      const b = el("button", null, lbl);
+      b.type = "button";
+      b.id = `w-${k}-${val}`;
+      b.setAttribute("aria-pressed", weights[k] === val);
+      b.addEventListener("click", () => { weights[k] = val; store.set("weights", weights); renderPrefs(); render(); });
+      seg.appendChild(b);
+    }
+    row.appendChild(seg);
+    box.appendChild(row);
+  }
+  const reset = el("button", "linkish", "Reset to defaults");
+  reset.type = "button";
+  reset.addEventListener("click", () => { weights = { ...DEFAULT_W }; store.set("weights", weights); renderPrefs(); render(); });
+  const note = el("p", "prefs-note", "Off hides a category. Love makes its strongest listings Don't miss. ");
+  note.appendChild(reset);
+  box.appendChild(note);
+}
+
+function renderTypeFilter(win) {
+  const box = document.getElementById("typefilter");
+  box.innerHTML = "";
+  const counts = {};
+  const saved = typeFilter; typeFilter = new Set();
+  for (const r of entries(win)) counts[r.cat] = (counts[r.cat] || 0) + 1;
+  typeFilter = saved;
+  for (const x of EXHIBITS.filter(x => parse(x.to) >= win[0] && parse(x.from) <= win[1])) { const c = x.cat || exCat; counts[c] = (counts[c] || 0) + 1; }
+  const chip = (label, active, onClick, n, disabled) => {
+    const b = el("button", "chip", esc(label) + (n != null ? ` <span class="n">${n}</span>` : ""));
+    b.type = "button";
+    b.setAttribute("aria-pressed", active);
+    b.disabled = !!disabled;
+    b.addEventListener("click", onClick);
+    box.appendChild(b);
+  };
+  chip("All", !typeFilter.size, () => { typeFilter.clear(); store.set("typeFilter", []); render(); });
+  for (const [k, name] of Object.entries(CATS)) {
+    const n = counts[k] || 0;
+    chip(name, typeFilter.has(k), () => {
+      typeFilter.has(k) ? typeFilter.delete(k) : typeFilter.add(k);
+      store.set("typeFilter", [...typeFilter]);
+      render();
+    }, n, !n && !typeFilter.has(k));
+  }
+}
+
+function render() {
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view));
+  const win = windowFor(view);
+  renderTypeFilter(win);
+  const list = entries(win);
+  renderBook();
+  renderPicks(list);
+  renderListing(list, win);
+  renderExhibits(win);
+}
+
+document.getElementById("compiled").textContent = "listings compiled " + fmtShort(parse(COMPILED)) + " 2026";
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { view = b.dataset.view; store.set("view", view); render(); }));
+const pt = document.getElementById("prefs-toggle");
+pt.addEventListener("click", () => { const p = document.getElementById("prefs"); p.hidden = !p.hidden; pt.setAttribute("aria-expanded", !p.hidden); });
+const sd = document.getElementById("show-dismissed");
+sd.addEventListener("change", () => { showDismissed = sd.checked; render(); });
+initData();
+initFeedback();
+const os = document.getElementById("only-starred"); os.checked = onlyStarred;
+os.addEventListener("change", () => { onlyStarred = os.checked; store.set("onlyStarred", onlyStarred); render(); });
+const hl = document.getElementById("hide-low"); hl.checked = hideLow;
+hl.addEventListener("change", () => { hideLow = hl.checked; store.set("hideLow", hideLow); render(); });
+document.getElementById("credits").innerHTML = "<b>Images</b> via Wikimedia Commons:" + Object.values(IMAGES).map(i => `<span>${esc(i.credit)}</span>`).join("");
+const ea = document.getElementById("expand-all");
+ea.checked = store.get("expandAll", false);
+document.body.classList.toggle("expand-all", ea.checked);
+ea.addEventListener("change", () => { document.body.classList.toggle("expand-all", ea.checked); store.set("expandAll", ea.checked); });
+if (mobileMQ.matches) document.getElementById("legend").open = false;
+renderPrefs();
+render();
+</script>
