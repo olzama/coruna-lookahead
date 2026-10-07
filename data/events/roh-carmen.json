@@ -1,0 +1,21 @@
+{
+ "id": "roh-carmen",
+ "cat": "opera",
+ "t": "Royal Opera: Carmen (live broadcast)",
+ "who": "Damiano Michieletto's production; Ginger Costa-Jackson, Russell Thomas, Adriana González; cond. Sesto Quatrini",
+ "v": "Cantones Cines",
+ "dates": [
+  {
+   "d": "2026-11-10",
+   "t": ""
+  }
+ ],
+ "pick": 4,
+ "src": "https://www.cantonescines.com/ficha/pelicula/4999-carmen",
+ "buy": "https://www.cantonescines.com/ficha/pelicula/4999-carmen",
+ "note": "Live from the Royal Opera House, 3 h 5 min with one interval.",
+ "tbc": "Start time on the cinema page",
+ "fit": "A theatre-driven Carmen from one of today's leading opera directors: drama first.",
+ "updatedAt": "2026-10-07T10:30:00Z",
+ "source": "refresh"
+}

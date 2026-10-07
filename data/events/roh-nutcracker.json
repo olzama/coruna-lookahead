@@ -1,0 +1,20 @@
+{
+ "id": "roh-nutcracker",
+ "cat": "dance",
+ "t": "Royal Ballet: The Nutcracker (live broadcast)",
+ "who": "Peter Wright's production; Mayara Magri, Reece Clarke",
+ "v": "Cantones Cines",
+ "dates": [
+  {
+   "d": "2026-12-01",
+   "t": ""
+  }
+ ],
+ "pick": 3,
+ "src": "https://www.cantonescines.com/ficha/pelicula/5000-el-cascanueces",
+ "buy": "https://www.cantonescines.com/ficha/pelicula/5000-el-cascanueces",
+ "note": "Live from the Royal Opera House, 2 h 20 min.",
+ "tbc": "Start time on the cinema page",
+ "updatedAt": "2026-10-07T10:30:00Z",
+ "source": "refresh"
+}

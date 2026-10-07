@@ -310,7 +310,7 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
     </div>
     <aside class="side">
       <section>
-        <h2>On view</h2>
+        <h2>On view &amp; on screen</h2>
         <div class="ex-list" id="exhibits"></div>
       </section>
       <details class="legend" id="legend">
@@ -1095,7 +1095,7 @@ function renderProfileEditor(box) {
   const status = el("p", "fb-status", "");
   status.setAttribute("role", "status");
   box.appendChild(el("h3", "ed-h", "Your interests"));
-  box.appendChild(el("p", "prefs-note", "These drive the ranking here and tell the scans what to look for. Describe each interest in your own words; the more specific, the better the finds."));
+  box.appendChild(el("p", "prefs-note", "Everything here is read by the scans as their instructions, and drives the ranking on this page. Describe each interest in your own words; the more specific, the better the finds. Changes apply from the next scan."));
   const list = el("div", "int-list");
   (PROF.interests || []).forEach((it, i) => {
     const row = el("div", "int-row");
@@ -1143,6 +1143,7 @@ function renderProfileEditor(box) {
   mkArea("prof-dislikes", "Not interested in (one per line)", "e.g. commercial pop concerts", (PROF.dislikes || []).join("\n"), v => { PROF.dislikes = v.split("\n").map(x => x.trim()).filter(Boolean); });
   mkArea("prof-about", "About me (helps the scans find what fits you)", "Work, background, languages, anything that shapes your taste", PROF.about, v => { PROF.about = v.trim(); }, 4);
   mkArea("prof-city", "Where", "City, and how far you'd travel", PROF.city, v => { PROF.city = v.trim(); }, 1);
+  mkArea("prof-notes", "Instructions for the scans", "Anything else the scans should know, in plain words. For example: also include well-reviewed new films; skip events after 22:00; flag anything with a Russian connection.", PROF.notes, v => { PROF.notes = v.trim(); }, 3);
   box.appendChild(status);
 }
 
