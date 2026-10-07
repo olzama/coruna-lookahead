@@ -97,6 +97,9 @@ a.bk-ttl:hover { text-decoration: underline; text-underline-offset: 3px; }
 .bk-act:empty { display: none; }
 .bk-buy { font: 600 .75rem/1 var(--font-body); color: var(--bg); background: var(--accent); text-decoration: none; padding: .45rem .8rem; border-radius: 999px; white-space: nowrap; }
 .bk-dis { font-size: .72rem; margin-left: auto; }
+.bk-row.jumpable { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.bk-row.jumpable:hover { border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
+.bk-row.jumpable:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .bk-buy.alt { background: var(--accent-soft); color: var(--ink); border: 1px solid var(--accent); }
 .bk-status .new { font-weight: 700; color: var(--bg); background: var(--beacon); border-radius: 3px; padding: 0 .3rem; letter-spacing: 0; }
 @media (max-width: 640px) { .book-list { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding-bottom: .25rem; } .bk-row { flex: 0 0 78%; scroll-snap-align: start; } }
@@ -733,6 +736,12 @@ function renderEvent(r) {
 function jumpTo(id) {
   let row = document.getElementById("ev-" + id);
   if (!row && view !== "season") { view = "season"; render(); row = document.getElementById("ev-" + id); }
+  if (!row) {
+    typeFilter.clear(); store.set("typeFilter", []);
+    onlyStarred = false; hideLow = false; showDismissed = true;
+    for (const [elId, v] of [["only-starred", false], ["hide-low", false], ["show-dismissed", true]]) { const c = document.getElementById(elId); if (c) c.checked = v; }
+    render(); row = document.getElementById("ev-" + id);
+  }
   if (!row) return;
   setCol("ev:" + id, false);
   row.classList.remove("collapsed");
@@ -875,6 +884,25 @@ function fbControls(id, title, cat, venue) {
   return box;
 }
 
+/* Book-early cards jump to their listing when clicked anywhere except their buttons and links. */
+function makeJump(li, id) {
+  li.classList.add("jumpable");
+  li.tabIndex = 0;
+  li.setAttribute("role", "link");
+  li.setAttribute("aria-label", "Show in the listing");
+  const go = ev => { if (ev.target.closest("a.bk-buy, button")) return; ev.preventDefault(); jumpTo(id); };
+  li.addEventListener("click", go);
+  li.addEventListener("keydown", ev => { if (ev.key === "Enter") go(ev); });
+}
+function alertEventId(a) {
+  const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const urls = e => [e.src, ...(e.buy ? (typeof e.buy === "string" ? [e.buy] : Object.values(e.buy)) : [])];
+  const byUrl = EVENTS.find(e => a.url && urls(e).includes(a.url));
+  if (byUrl) return byUrl.id;
+  const at = norm(a.title);
+  const byTitle = EVENTS.find(e => { const et = norm(e.t); return et && at && (at.includes(et) || et.includes(at)); });
+  return byTitle ? byTitle.id : null;
+}
 function renderBook() {
   const sec = document.getElementById("book-sec"), box = document.getElementById("book");
   box.innerHTML = "";
@@ -899,12 +927,14 @@ function renderBook() {
     });
     act.appendChild(dis);
     li.appendChild(act);
+    const evId = alertEventId(a);
+    if (evId) makeJump(li, evId);
     box.appendChild(li);
   }
   for (const r of items) {
     const li = el("li", "bk-row");
     li.innerHTML = dateBlock(r.date) + `<span class="bk-text"><span class="bk-status">${rel(diff(TODAY, r.date))}</span><a class="bk-ttl" href="#ev-${r.e.id}">${(r.opening ? r.opening + ": " : "") + esc(r.e.t)}</a><span class="bk-why">${esc(DEMAND[r.e.id])}</span></span>`;
-    li.querySelector("a.bk-ttl").addEventListener("click", ev => { ev.preventDefault(); jumpTo(r.e.id); });
+    makeJump(li, r.e.id);
     const u = buyUrl(r.e, r.date);
     const act = el("span", "bk-act");
     if (u && !r.e.soldOut) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${u}" target="_blank" rel="noopener">Tickets</a>`);
