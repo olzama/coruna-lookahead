@@ -202,6 +202,11 @@ a.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button.ttl { display: block; font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: default; width: 100%; }
 .ex-head { display: flex; justify-content: space-between; gap: .5rem; align-items: start; }
 .mobile-only { display: none; }
+.listing-col { min-width: 0; }
+.list-tools { display: flex; justify-content: flex-end; gap: .5rem; margin-bottom: .6rem; }
+.tool-btn { font: 500 .75rem/1 var(--font-body); color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: .4rem .7rem; cursor: pointer; display: inline-flex; gap: .35rem; align-items: center; }
+.tool-btn:hover { color: var(--ink); border-color: var(--accent); }
+.tool-btn span { font-family: var(--font-mono); font-weight: 600; }
 .ctrls { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
 .tog { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px solid var(--rule); background: var(--surface); color: var(--muted); font: 600 .95rem/1 var(--font-mono); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; flex: 0 0 auto; }
 .tog:hover { color: var(--ink); border-color: var(--accent); }
@@ -276,7 +281,6 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
     <label class="toggle" id="dismissed-wrap" hidden><input type="checkbox" id="show-dismissed"> Show dismissed <span id="dismissed-n"></span></label>
     <label class="toggle"><input type="checkbox" id="hide-low"> Hide minor listings</label>
     <label class="toggle"><input type="checkbox" id="show-past"> Show past 30 days</label>
-    <span class="toggle"><button type="button" class="linkish" id="expand-all-btn">Expand all</button> · <button type="button" class="linkish" id="collapse-all-btn">Collapse all</button></span>
   </div>
   <div class="prefs" id="prefs" hidden></div>
   <div class="typefilter" id="typefilter" role="group" aria-label="Filter by type"></div>
@@ -292,7 +296,13 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
   </section>
 
   <div class="grid">
-    <main id="listing"></main>
+    <div class="listing-col">
+      <div class="list-tools" role="group" aria-label="Expand or collapse the listings">
+        <button type="button" class="tool-btn" id="expand-all-btn"><span aria-hidden="true">+</span> Expand all</button>
+        <button type="button" class="tool-btn" id="collapse-all-btn"><span aria-hidden="true">−</span> Collapse all</button>
+      </div>
+      <main id="listing"></main>
+    </div>
     <aside class="side">
       <section>
         <h2>On view</h2>
