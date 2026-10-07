@@ -1,0 +1,20 @@
+{
+ "id": "osg-disco",
+ "cat": "music",
+ "t": "Night Fever: symphonic disco",
+ "who": "OSG",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-11-26",
+   "t": "20:00"
+  }
+ ],
+ "pick": 1,
+ "price": "from €14.25",
+ "src": "https://www.palaciodelaopera.com/evento/night-fever-musica-disco-sinfonica-de-galicia/",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amg2c6-night-fever-musica-disco-sinfonica-de-galicia",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

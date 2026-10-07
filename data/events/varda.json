@@ -1,0 +1,20 @@
+{
+ "id": "varda",
+ "cat": "cinema",
+ "t": "Vagabond (Sans toit ni loi)",
+ "who": "Agnès Varda · Colón Cinema",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-12-20",
+   "t": "19:00"
+  }
+ ],
+ "pick": 4,
+ "price": "€6",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/colon-cinema/suceso/1453926452147?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/241-teatro-colon/x3amhchw-colon-cinema-sans-toit-ni-loi-28sin-techo-ni-ley29-de-agnes-varda",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

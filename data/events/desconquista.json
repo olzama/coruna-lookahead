@@ -1,0 +1,25 @@
+{
+ "id": "desconquista",
+ "cat": "theater",
+ "t": "La desconquista",
+ "who": "Ron Lalá",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-11-06",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-11-07",
+   "t": "20:30"
+  }
+ ],
+ "pick": 4,
+ "price": "€8.50–18",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-la-desconquista/suceso/1453921897987?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5vrq-ciclo-principal-outono-2026-la-desconquista-de-ron-lala",
+ "note": "Ciclo Principal. Musical comedy in Golden Age verse about three castaways bound for the New World.",
+ "fit": "Ron Lalá write in Golden Age-style verse, dense with Spanish wordplay. A treat for someone who loves languages.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

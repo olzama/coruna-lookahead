@@ -1,0 +1,24 @@
+{
+ "id": "african-queen",
+ "cat": "cinema",
+ "t": "The African Queen",
+ "who": "John Huston",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-11-06",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-11-07",
+   "t": "17:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€3",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/the-african-queen-la-reina-de-africa-de-john-huston/suceso/1453923453696?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/255-forum-metropolitano/x3ambg11-cinemania-clasica-the-african-queen-28la-reina-de-africa29-de-john-huston",
+ "note": "Saturday also at 20:00.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

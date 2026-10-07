@@ -1,0 +1,20 @@
+{
+ "id": "blackbox",
+ "cat": "theater",
+ "t": "Black Box: unha saga épica",
+ "who": "Gabriel Calderón & Hugo Torres",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-12-13",
+   "t": "19:00"
+  }
+ ],
+ "pick": 3,
+ "price": "€6.50–14",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-black-box-unha-saga-epica/suceso/1453921912774?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5m3r-ciclo-principal-outono-2026-black-box-unha-saga-epica-de-gabriel-calderon-e-hugo-torres",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

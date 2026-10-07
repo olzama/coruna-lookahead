@@ -1,0 +1,24 @@
+{
+ "id": "cousins",
+ "cat": "cinema",
+ "t": "Les Cousins",
+ "who": "Claude Chabrol",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-12-04",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-12-05",
+   "t": "17:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€3",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/les-cousins-los-primos-de-claude-chabrol/suceso/1453923454388?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/255-forum-metropolitano/x3ambh6p-cinemania-clasica-les-cousins-28los-primos29-de-claude-chabrol",
+ "note": "Saturday also at 20:00.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

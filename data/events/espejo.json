@@ -1,0 +1,21 @@
+{
+ "id": "espejo",
+ "cat": "cinema",
+ "t": "Mirror (Zerkalo)",
+ "who": "Andrei Tarkovsky · Colón Cinema, with a talk by María von Touceda",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-10-22",
+   "t": "19:00"
+  }
+ ],
+ "pick": 5,
+ "price": "€6",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/colon-cinema/suceso/1453926452147?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/241-teatro-colon/x3amh8ac-colon-cinema-zerkalo-28el-espejo29-de-abdrei-tarkovski",
+ "note": "Same time as the first Tosca.",
+ "fit": "Tarkovsky's memory film, with his father Arseny's poems read over it: Russian poetry, which you found your way back to through Blok and Akhmatova.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,27 @@
+{
+ "id": "lirica-incl",
+ "cat": "opera",
+ "t": "Inclusive lyric recitals",
+ "who": "Carmen Larios · Chiara Salerno · Nerea González, with Gabriel López at the piano",
+ "v": "Civic centres: Monte Alto, Circo de Artesanos, Fórum",
+ "dates": [
+  {
+   "d": "2026-10-29",
+   "t": "19:00"
+  },
+  {
+   "d": "2026-11-06",
+   "t": ""
+  },
+  {
+   "d": "2026-11-18",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "free",
+ "src": "https://www.amigosoperacoruna.org/lirica-inclusiva/",
+ "note": "Young singers. 29 Oct Monte Alto, 6 Nov Circo de Artesanos, 18 Nov Fórum.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

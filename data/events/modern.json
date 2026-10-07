@@ -1,0 +1,20 @@
+{
+ "id": "modern",
+ "cat": "cinema",
+ "t": "Modern Times",
+ "who": "Charles Chaplin · Colón Cinema",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-11-19",
+   "t": "19:30"
+  }
+ ],
+ "pick": 4,
+ "price": "€6",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/colon-cinema/suceso/1453926452147?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/default_category/241-teatro-colon/x3amhbe2-colon-cinema-modern-times-28tiempos-modernos29-de-charles-chaplin",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

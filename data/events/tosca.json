@@ -1,0 +1,26 @@
+{
+ "id": "tosca",
+ "cat": "opera",
+ "t": "Puccini: Tosca",
+ "who": "Miren Urbieta-Vega · Ragaa Eldin · Carlos Álvarez · OSG, Coros Gaos & Cantabile",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-10-22",
+   "t": "19:00"
+  },
+  {
+   "d": "2026-10-24",
+   "t": "19:00"
+  }
+ ],
+ "pick": 5,
+ "price": "from €43.20",
+ "src": "https://www.palaciodelaopera.com/evento/opera-tosca-de-giacomo-puccini/",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/lirica/115-palacio-de-la-opera/x3akv69a-opera3a-tosca-de-giacomo-puccini",
+ "note": "74th Lyric Season. Production from Opéra-Théâtre de Metz, conducted by Paul-Émile Fourny. First Tosca in A Coruña in 22 years. The best seats have gone (7 Oct).",
+ "img": "tosca",
+ "fit": "You judge opera as drama first and count tears as the test; La Bohème did it in Seattle. Carlos Álvarez is one of the great singing actors, and Scarpia is his signature role.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,20 @@
+{
+ "id": "op-talk-tosca",
+ "cat": "opera",
+ "t": "Talk: the keys to Tosca",
+ "who": "Irene de Juan Bernabéu, musicologist (Radio Clásica, Teatro Real)",
+ "v": "Sede Afundación, press room",
+ "dates": [
+  {
+   "d": "2026-10-21",
+   "t": "19:00"
+  }
+ ],
+ "pick": 4,
+ "price": "free",
+ "src": "https://www.afundacion.org/es/agenda/evento/actividades-paralelas-de-la-74-a-temporada-lirica-sede-afundacion-a-coruna/",
+ "note": "With recorded examples, the day before the first performance. Free until full.",
+ "fit": "A primer the day before the Tosca you marked as liked.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

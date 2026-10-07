@@ -1,0 +1,21 @@
+{
+ "id": "drexler",
+ "cat": "music",
+ "t": "Jorge Drexler",
+ "who": "Taracá tour",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-11-21",
+   "t": "21:00"
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "soldOut": true,
+ "src": "https://www.palaciodelaopera.com/evento/jorge-drexler/",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_pop/115-palacio-de-la-opera/x3akk26z-jorge-drexler",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

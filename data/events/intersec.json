@@ -1,0 +1,27 @@
+{
+ "id": "intersec",
+ "cat": "cinema",
+ "t": "Intersección 2026: international shorts",
+ "who": "A Coruña International Film Festival",
+ "v": "Filmoteca de Galicia",
+ "dates": [
+  {
+   "d": "2026-10-13",
+   "t": "18:00"
+  },
+  {
+   "d": "2026-10-14",
+   "t": "18:00"
+  },
+  {
+   "d": "2026-10-15",
+   "t": "18:00"
+  }
+ ],
+ "pick": 3,
+ "price": "",
+ "src": "https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/interseccion-2026",
+ "note": "Four themed sessions at the Filmoteca. The full festival runs 15–19 Oct at the Colón, Palexco and Fundación Seoane: interseccion.gal.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

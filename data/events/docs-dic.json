@@ -1,0 +1,20 @@
+{
+ "id": "docs-dic",
+ "cat": "cinema",
+ "t": "La Pietá",
+ "who": "Pepe Andreu · Docs del mes",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-12-03",
+   "t": "20:00"
+  }
+ ],
+ "pick": 2,
+ "price": "€3",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/diciembre-2026-docs-del-mes-la-pieta-de-pepe-andreu/suceso/1453923355919?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/documental/255-forum-metropolitano/x3amba6p-el-doc-del-mes-la-pieta-de-pepe-andreu",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,21 @@
+{
+ "id": "fernandez-mallo",
+ "cat": "literature",
+ "t": "Agustín Fernández Mallo: El ángel de la Inteligencia Artificial",
+ "who": "Galaxia Gutenberg · author presentation",
+ "v": "Librería Moito Conto",
+ "dates": [
+  {
+   "d": "2026-12-01",
+   "t": "19:00"
+  }
+ ],
+ "pick": 5,
+ "price": "free",
+ "src": "https://www.moitoconto.com/agenda/presentacion-de-el-angel-de-la-inteligencia-artificial-de-agustin-fernandez-mallo_272",
+ "note": "The Coruña-born physicist and novelist of the Nocilla trilogy.",
+ "fit": "A Coruña writer on artificial intelligence, the subject of your own research on LLM language.",
+ "demand": "A small bookshop room and a hometown author. Arrive early.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

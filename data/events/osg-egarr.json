@@ -1,0 +1,29 @@
+{
+ "id": "osg-egarr",
+ "cat": "orchestral",
+ "t": "Haydn: Nelson Mass · Mozart: Symphony No. 39",
+ "who": "Richard Egarr · OSG and chorus",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-11-06",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-11-07",
+   "t": "20:00"
+  }
+ ],
+ "pick": 5,
+ "price": "from €14.25",
+ "src": "https://www.palaciodelaopera.com/evento/sinfornica-de-galicia-06-11-26-in-angustiis-haydn-richard-egarr/",
+ "buy": {
+  "2026-11-06": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amfb0g-sinfonica-de-galicia-062f112f26-in-angustiis-haydn-richard-egarr",
+  "2026-11-07": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3ameqac-sinfonica-de-galicia-072f112f26-in-angustiis-haydn-richard-egarr"
+ },
+ "note": "Soloists Elionor Martínez, Helena Ressurreição, Vicent Romero, Sebastià Peris.",
+ "img": "haydn",
+ "fit": "Recalls the Olari Elts Haydn you loved in Seattle for its accents and detail. Egarr works in the same period-informed way.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

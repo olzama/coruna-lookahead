@@ -1,0 +1,27 @@
+{
+ "id": "noites",
+ "cat": "chamber",
+ "t": "Noites na Cidade Vella",
+ "who": "9 Oct Miguel Iglesias, piano (Afundación) · 14 Oct, 12:00 Hrachya Avanesyan, violin & Jean-Baptiste Doulcet, piano (Afundación) · 17 Oct Orquestra de Cámara Galega, cond. Rogelio Groba (Iglesia de los Dominicos)",
+ "v": "Old town venues",
+ "dates": [
+  {
+   "d": "2026-10-09",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-14",
+   "t": "12:00"
+  },
+  {
+   "d": "2026-10-17",
+   "t": "21:00"
+  }
+ ],
+ "pick": 3,
+ "price": "free",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/v-ciclo-de-conciertos-noites-na-cidade-vella/suceso/1453925127929?argIdioma=es",
+ "note": "Last three concerts of the free chamber cycle. First come, first served.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

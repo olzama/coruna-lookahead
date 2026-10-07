@@ -1,0 +1,20 @@
+{
+ "id": "liga-xdm",
+ "cat": "chess",
+ "t": "VII Liga XDM por equipos",
+ "who": "Team league",
+ "v": "A Coruña",
+ "dates": [
+  {
+   "d": "2026-10-17",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "src": "https://sandeajedrez.com/proximos-torneos/",
+ "tbc": "Only a tournament calendar lists this; venue and entry unknown",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

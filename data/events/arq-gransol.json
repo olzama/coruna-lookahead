@@ -1,0 +1,20 @@
+{
+ "id": "arq-gransol",
+ "cat": "architecture",
+ "t": "Guided visit: Lonxa do Gran Sol fish market",
+ "who": "Semana da Arquitectura",
+ "v": "Starts at Muro do Porto, Palloza entrance",
+ "dates": [
+  {
+   "d": "2026-10-10",
+   "t": "13:00"
+  }
+ ],
+ "pick": 3,
+ "price": "free",
+ "reg": "semanadaarquitectura2026@coruna.gal",
+ "src": "https://www.coruna.gal/descarga/1453927951124/A4_Programa_Semana-Arquitectura_2026_V.2.pdf",
+ "note": "Max 25 people.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,27 @@
+{
+ "id": "habana-cine",
+ "cat": "cinema",
+ "t": "Habana Mater film cycle",
+ "who": "Accompanies the Luis Gabú exhibition",
+ "v": "Museo de Belas Artes",
+ "dates": [
+  {
+   "d": "2026-10-14",
+   "t": ""
+  },
+  {
+   "d": "2026-10-21",
+   "t": ""
+  },
+  {
+   "d": "2026-10-28",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "src": "https://museobelasartescoruna.xunta.gal/es/exposiciones/habana-mater-2003-2023-luis-gabu",
+ "note": "Wednesdays.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

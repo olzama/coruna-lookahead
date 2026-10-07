@@ -1,0 +1,24 @@
+{
+ "id": "violencia",
+ "cat": "theater",
+ "t": "Violencia",
+ "who": "Dir. Diego Garrido Sanz · with Esther Ortega, Cecilia Freire",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-11-20",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-11-21",
+   "t": "20:30"
+  }
+ ],
+ "pick": 4,
+ "price": "€9.50–21.50",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-violencia/suceso/1453921905674?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5ww3-ciclo-principal-outono-2026-violencia-de-fran-kranz",
+ "note": "Ciclo Principal. Forgiveness and coexistence after a school shooting.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

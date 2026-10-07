@@ -1,0 +1,28 @@
+{
+ "id": "osg-falla",
+ "cat": "opera",
+ "t": "Falla: La vida breve (concert)",
+ "who": "José Trigueros · OSG and chorus · Raquel Lojendio, Sandra Calderón (cantaora)",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-12-04",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-12-05",
+   "t": "20:00"
+  }
+ ],
+ "pick": 4,
+ "price": "from €14.25",
+ "src": "https://www.palaciodelaopera.com/evento/sinfonica-de-galicia-04-12-26-manuel-de-falla-la-vida-breve/",
+ "buy": {
+  "2026-12-04": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amfbn3-sinfonica-de-galicia-042f122f26-manuel-de-falla-la-vida-breve",
+  "2026-12-05": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amerd1-sinfonica-de-galicia-052f122f26-manuel-de-falla-la-vida-breve"
+ },
+ "note": "First half: Bal y Gay, Rosa García Ascot, Rodolfo Halffter.",
+ "img": "falla",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,19 @@
+{
+ "id": "arq-expo-visit",
+ "cat": "architecture",
+ "t": "Guided visit: Coruña brutalista exhibition",
+ "who": "Semana da Arquitectura",
+ "v": "Palacio Municipal de María Pita",
+ "dates": [
+  {
+   "d": "2026-10-09",
+   "t": "18:00"
+  }
+ ],
+ "pick": 3,
+ "price": "free",
+ "src": "https://www.coruna.gal/descarga/1453927951124/A4_Programa_Semana-Arquitectura_2026_V.2.pdf",
+ "note": "Followed at 19:00 by a talk with Arturo and José Antonio Franco Taboada in the Salón Real.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

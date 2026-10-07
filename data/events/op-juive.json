@@ -1,0 +1,19 @@
+{
+ "id": "op-juive",
+ "cat": "opera",
+ "t": "Screening: Halévy, La Juive",
+ "who": "Wiener Staatsoper, 1999, cond. Vjekoslav Šutej",
+ "v": "Sede Afundación, press room",
+ "dates": [
+  {
+   "d": "2026-10-19",
+   "t": "18:30"
+  }
+ ],
+ "pick": 3,
+ "price": "free",
+ "src": "https://www.afundacion.org/es/agenda/evento/actividades-paralelas-de-la-74-a-temporada-lirica-sede-afundacion-a-coruna/",
+ "note": "French subtitles only. Free until full.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

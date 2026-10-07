@@ -1,0 +1,20 @@
+{
+ "id": "trc-mutar",
+ "cat": "dance",
+ "t": "Mutar. Romper. Vibrar",
+ "who": "TRCdanza",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-10-30",
+   "t": "20:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€10",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/trcdanza-mutar-romper-vibrar/suceso/1453919489843?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/danza/240-teatro-rosalia/x3akp876-trc-danza-mutar-romper-vibrar",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,21 @@
+{
+ "id": "kiev-swan",
+ "cat": "dance",
+ "t": "Swan Lake",
+ "who": "Ballet de Kiev (touring)",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-10-17",
+   "t": "20:30"
+  }
+ ],
+ "pick": 1,
+ "price": "from €41.34",
+ "src": "https://www.palaciodelaopera.com/evento/el-lago-de-los-cisnes-ballet-kiev/",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/danza/115-palacio-de-la-opera/x3akg51q-el-lago-de-los-cisnes-ballet-de-kiev-",
+ "note": "",
+ "warn": "Touring company. You have written about corps de ballet that stomp; expect that here.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

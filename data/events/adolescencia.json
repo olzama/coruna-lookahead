@@ -1,0 +1,24 @@
+{
+ "id": "adolescencia",
+ "cat": "theater",
+ "t": "Adolescencia infinita",
+ "who": "Pont Flotant (Escalante production)",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-10-16",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-10-17",
+   "t": "20:30"
+  }
+ ],
+ "pick": 4,
+ "price": "€8.50–18",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-adolescencia-infinita/suceso/1453921894951?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5ttj-ciclo-principal-outono-2026-adolescencia-infinita-de-pont-flotant",
+ "note": "Ciclo Principal. Three adults trying to understand adolescence, theirs and today's, with live music.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,26 @@
+{
+ "id": "picasso",
+ "cat": "theater",
+ "t": "El barbero de Picasso",
+ "who": "Borja Ortiz de Gondra · with Antonio Molero, Pepe Viyuela",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-12-18",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-12-19",
+   "t": "20:30"
+  }
+ ],
+ "pick": 4,
+ "price": "€10–25",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-el-barbero-de-picasso/suceso/1453921933228?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am63nb-ciclo-principal-outono-2026-el-barbero-de-picasso-de-borja-ortiz-de-gondra",
+ "note": "Picasso's friendship with his barber Eugenio Arias in 1950s France.",
+ "img": "picasso",
+ "fit": "Picasso spent his teens in A Coruña (1891–95). You wrote about not quite believing you were standing before his Violin and Grapes.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

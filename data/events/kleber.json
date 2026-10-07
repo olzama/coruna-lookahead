@@ -1,0 +1,23 @@
+{
+ "id": "kleber",
+ "cat": "cinema",
+ "t": "Kleber Mendonça Filho",
+ "who": "Retrospective",
+ "v": "Filmoteca de Galicia",
+ "dates": [
+  {
+   "d": "2026-10-20",
+   "t": ""
+  },
+  {
+   "d": "2026-10-21",
+   "t": ""
+  }
+ ],
+ "pick": 4,
+ "price": "",
+ "src": "https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/kleber-mendonca-filho",
+ "note": "The director of Aquarius, Bacurau and The Secret Agent.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

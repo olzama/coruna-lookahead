@@ -1,0 +1,31 @@
+{
+ "id": "animaccion",
+ "cat": "cinema",
+ "t": "Animacción 2026",
+ "who": "Animation festival, including Annecy winners",
+ "v": "Filmoteca de Galicia",
+ "dates": [
+  {
+   "d": "2026-10-28",
+   "t": ""
+  },
+  {
+   "d": "2026-10-29",
+   "t": ""
+  },
+  {
+   "d": "2026-10-30",
+   "t": ""
+  },
+  {
+   "d": "2026-10-31",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "src": "https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/animaccion-2026",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

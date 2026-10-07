@@ -1,0 +1,20 @@
+{
+ "id": "nadal-coruna",
+ "cat": "chess",
+ "t": "LXXVIII Torneo de Nadal Coruña",
+ "who": "The city's Christmas chess tournament, 78th edition",
+ "v": "A Coruña",
+ "dates": [
+  {
+   "d": "2026-12-20",
+   "t": ""
+  }
+ ],
+ "pick": 3,
+ "price": "",
+ "src": "https://sandeajedrez.com/proximos-torneos/",
+ "tbc": "Only a tournament calendar lists this; venue, format and registration unknown",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

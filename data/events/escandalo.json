@@ -1,0 +1,25 @@
+{
+ "id": "escandalo",
+ "cat": "theater",
+ "t": "Escándalo en redacción",
+ "who": "Estudo Momento",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-10-16",
+   "t": "21:00"
+  },
+  {
+   "d": "2026-10-17",
+   "t": "20:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€21–25",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/escandalo-en-redaccion/suceso/1453919631108?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/241-teatro-colon/x3aky8c2-escandalo-en-redaccion",
+ "note": "New high comedy from the company behind Escándalo en palacio, de 1888 and Señorita Julia.",
+ "fit": "Estudo Momento is one of the leading Galician companies working now.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

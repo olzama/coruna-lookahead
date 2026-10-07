@@ -1,0 +1,20 @@
+{
+ "id": "sonbert",
+ "cat": "cinema",
+ "t": "Puente aéreo: the cinema of Warren Sonbert",
+ "who": "Cycle presented by Francisco Algarín & Carlos Saldaña",
+ "v": "Filmoteca de Galicia",
+ "dates": [
+  {
+   "d": "2026-10-07",
+   "t": ""
+  }
+ ],
+ "pick": 3,
+ "price": "",
+ "src": "https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/puente-aereo-el-cine-de-warren-sonbert",
+ "tbc": "Session dates and times are on the cycle page",
+ "note": "American avant-garde diarist filmmaker, rarely screened.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

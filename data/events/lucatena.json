@@ -1,0 +1,19 @@
+{
+ "id": "lucatena",
+ "cat": "cinema",
+ "t": "Rafael Luca de Tena retrospective",
+ "who": "Materiais para unha historia do cine en Galicia",
+ "v": "Filmoteca de Galicia",
+ "dates": [
+  {
+   "d": "2026-10-23",
+   "t": "18:00"
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "src": "https://filmotecadegalicia.xunta.gal/es/programacion/ciclos/materiais-para-unha-historia-do-cine-en-galicia",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

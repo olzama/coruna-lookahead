@@ -1,0 +1,31 @@
+{
+ "id": "fiesta-cine",
+ "cat": "cinema",
+ "t": "Fiesta del Cine: €3.50 tickets",
+ "who": "Cantones Cines and Marineda City cinemas",
+ "v": "Commercial cinemas",
+ "dates": [
+  {
+   "d": "2026-10-19",
+   "t": ""
+  },
+  {
+   "d": "2026-10-20",
+   "t": ""
+  },
+  {
+   "d": "2026-10-21",
+   "t": ""
+  },
+  {
+   "d": "2026-10-22",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "€3.50",
+ "src": "https://www.fiestadelcine.com/",
+ "note": "No registration needed; buy at the box office or online.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

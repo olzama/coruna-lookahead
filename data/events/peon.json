@@ -1,0 +1,21 @@
+{
+ "id": "peon",
+ "cat": "music",
+ "t": "Mercedes Peón + Clara Peya",
+ "who": "Ciclo Tándem",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-10-18",
+   "t": "20:00"
+  }
+ ],
+ "pick": 3,
+ "price": "€4–8",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-tandem/suceso/1453926862630?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos/241-teatro-colon/x3ammasv-ciclo-tandem-mercedes-peon-2b-clara-peya",
+ "note": "An acoustic set with other women musicians.",
+ "fit": "Mercedes Peón takes Galician traditional song apart and rebuilds it.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

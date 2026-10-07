@@ -1,0 +1,20 @@
+{
+ "id": "erlac-final",
+ "cat": "chess",
+ "t": "Gran final ERLAC",
+ "who": "Circuito Diputación da Coruña",
+ "v": "A Coruña",
+ "dates": [
+  {
+   "d": "2026-10-12",
+   "t": ""
+  }
+ ],
+ "pick": 2,
+ "price": "",
+ "src": "https://sandeajedrez.com/proximos-torneos/",
+ "tbc": "Only a tournament calendar lists this; venue, format and entry rules unknown",
+ "note": "Earlier ERLAC tournaments were open only to players registered with the Galician federation.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

@@ -1,0 +1,25 @@
+{
+ "id": "entusiasmo",
+ "cat": "theater",
+ "t": "El entusiasmo",
+ "who": "Pablo Remón · with Francesco Carril, Natalia Hernández, Raúl Prieto, Marina Salas",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-11-13",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-11-14",
+   "t": "20:30"
+  }
+ ],
+ "pick": 5,
+ "price": "€10–25",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-el-entusiasmo/suceso/1453921902405?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5zs3-ciclo-principal-outono-2026-el-entusiasmo-de-pablo-remon",
+ "note": "Ciclo Principal. Max award 2026 for best writing. 125 minutes.",
+ "demand": "Max award-winning play, two nights only, cheapest seats €10.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

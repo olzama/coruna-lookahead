@@ -1,0 +1,20 @@
+{
+ "id": "colonia",
+ "cat": "orchestral",
+ "t": "Kölner Kammerorchester",
+ "who": "Chamber orchestra from Cologne",
+ "v": "Auditorio del Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-10-08",
+   "t": "20:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€23 (students under 28 €15)",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/concierto-de-la-orquesta-de-camara-de-colonia/suceso/1453923662290?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/255-forum-metropolitano/x3am6t8z-concierto-de-la-orquesta-de-camara-de-colonia",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

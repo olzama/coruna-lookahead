@@ -1,0 +1,20 @@
+{
+ "id": "afc-ecos",
+ "cat": "chamber",
+ "t": "Trío Ecos del Atlántico",
+ "who": "Afundación chamber series",
+ "v": "Auditorio Sede Afundación",
+ "dates": [
+  {
+   "d": "2026-12-16",
+   "t": "20:00"
+  }
+ ],
+ "pick": 2,
+ "price": "€16.60",
+ "src": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcqev-ciclo-de-musica-de-camara3a-trio-ecos-del-atlantico",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcqev-ciclo-de-musica-de-camara3a-trio-ecos-del-atlantico",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

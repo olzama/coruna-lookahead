@@ -1,0 +1,19 @@
+{
+ "id": "trc-ontime",
+ "cat": "dance",
+ "t": "On time",
+ "who": "Urban and contemporary dance · TRCdanza",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-11-08",
+   "t": "20:30"
+  }
+ ],
+ "pick": 2,
+ "price": "free",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/trcdanza-on-time/suceso/1453919491228?argIdioma=es",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

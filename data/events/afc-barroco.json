@@ -1,0 +1,20 @@
+{
+ "id": "afc-barroco",
+ "cat": "chamber",
+ "t": "OSG Baroque and Classical Ensemble",
+ "who": "Afundación chamber series",
+ "v": "Auditorio Sede Afundación",
+ "dates": [
+  {
+   "d": "2026-10-28",
+   "t": "20:00"
+  }
+ ],
+ "pick": 3,
+ "price": "€16.60",
+ "src": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcke3-ciclo-de-musica-de-camara3a-ensemble-barroco-y-clasico-de-la-osg",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/294-auditorio-sede-afundacion-a-coruna/x3amcke3-ciclo-de-musica-de-camara3a-ensemble-barroco-y-clasico-de-la-osg",
+ "note": "Players from the Sinfónica on period-style forces.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

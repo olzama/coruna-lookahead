@@ -1,0 +1,28 @@
+{
+ "id": "osg-altstaedt",
+ "cat": "orchestral",
+ "t": "Schumann: Cello Concerto · Dvořák: Symphony No. 7",
+ "who": "Nicolas Altstaedt, cello and direction · OSG",
+ "v": "Palacio de la Ópera",
+ "dates": [
+  {
+   "d": "2026-10-09",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-10",
+   "t": "20:00"
+  }
+ ],
+ "pick": 4,
+ "price": "from €14.25",
+ "src": "https://www.palaciodelaopera.com/evento/sinfonica-galicia-09-10-26-nicolas-altstaedt-solista-y-director/",
+ "buy": {
+  "2026-10-09": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amf956-sinfonica-de-galicia-092f102f26-nicolas-altstaedt-solista-y-director",
+  "2026-10-10": "https://entradas.ataquilla.com/es/ventaentradas/conciertos_clasica/115-palacio-de-la-opera/x3amens6-sinfonica-de-galicia-102f102f26-nicolas-altstaedt-solista-y-director"
+ },
+ "tbc": "One more work still to be announced",
+ "note": "Altstaedt leads from the cello.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

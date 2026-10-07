@@ -1,0 +1,28 @@
+{
+ "id": "matrimonio",
+ "cat": "theater",
+ "t": "Un matrimonio sin filtros",
+ "who": "Javier Veiga",
+ "v": "Teatro Colón",
+ "dates": [
+  {
+   "d": "2026-10-08",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-10-09",
+   "t": "20:30"
+  },
+  {
+   "d": "2026-10-10",
+   "t": "20:30"
+  }
+ ],
+ "pick": 1,
+ "price": "€24–28",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/un-matrimonio-sin-filtros/suceso/1453917215765?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/241-teatro-colon/x3akwsm0-un-matrimonio-sin-filtros",
+ "note": "Commercial comedy.",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}

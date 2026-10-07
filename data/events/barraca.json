@@ -1,0 +1,20 @@
+{
+ "id": "barraca",
+ "cat": "theater",
+ "t": "La barraca",
+ "who": "After Blasco Ibáñez",
+ "v": "Teatro Rosalía de Castro",
+ "dates": [
+  {
+   "d": "2026-11-28",
+   "t": "20:30"
+  }
+ ],
+ "pick": 3,
+ "price": "€9.50–21.50",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/ciclo-principal-la-barraca/suceso/1453921909179?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/teatro/240-teatro-rosalia/x3am5myq-ciclo-principal-outono-2026-la-barraca-de-blasco-ibanez",
+ "note": "",
+ "updatedAt": "2026-10-07T09:00:00Z",
+ "source": "refresh"
+}
