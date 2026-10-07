@@ -2,7 +2,7 @@
 """Apply a pick-images.py result.
 
 Writes an ArtifactData batch: an `images` doc per new picture ({src, alt,
-credit, page}) and an update setting `img` on each listing. With --page,
+credit, page, pos}) and an update setting `img` on each listing. With --page,
 also adds the pictures to the page's inline IMAGES map; with --data, sets
 `img` in the local data/ copies.
 
@@ -16,7 +16,8 @@ ap.add_argument("--page"); ap.add_argument("--data", action="store_true")
 a = ap.parse_args()
 res = json.load(open(a.result))["picks"]
 uniq = {r["img"]: r for r in res}.values()
-entry = lambda r: {"src": r.get("src") or f"img/{r['img']}.jpg", "alt": r["alt"], "credit": r["credit"], "page": r["page"]}
+entry = lambda r: {"src": r.get("src") or f"img/{r['img']}.jpg", "alt": r["alt"], "credit": r["credit"], "page": r["page"],
+                   **({"pos": r["pos"]} if r.get("pos") else {})}
 batch = [{"op": "set", "collection": "images", "doc_id": r["img"], "data": entry(r)} for r in uniq]
 if a.page:
     page = open(a.page).read()
