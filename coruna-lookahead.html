@@ -294,6 +294,7 @@ footer { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem;
 
   <div class="controls">
     <button class="linkish" id="prefs-toggle" aria-expanded="false" aria-controls="prefs">Your interests</button>
+    <label class="toggle"><input type="checkbox" id="only-rec"> Recommended only</label>
     <label class="toggle"><input type="checkbox" id="only-starred"> Starred only</label>
     <label class="toggle" id="dismissed-wrap" hidden><input type="checkbox" id="show-dismissed"> Show dismissed <span id="dismissed-n"></span></label>
     <label class="toggle"><input type="checkbox" id="hide-low"> Hide minor listings</label>
@@ -664,6 +665,8 @@ if (!validView(view)) view = "week";
 let weights = Object.assign({}, DEFAULT_W, store.get("weights", {}));
 let stars = new Set(store.get("stars", []));
 let onlyStarred = store.get("onlyStarred", false);
+/* "Recommended only" (Don't miss included) lasts for the visit, like the type filter. */
+let onlyRec = false;
 let hideLow = store.get("hideLow", false);
 /* Type filters last for the visit only, so a forgotten filter never hides most of the digest. */
 let typeFilter = new Set();
@@ -830,6 +833,7 @@ function entries([from, to]) {
   }
   return out
     .filter(r => !onlyStarred || stars.has(r.e.id))
+    .filter(r => !onlyRec || r.tier === "must" || r.tier === "rec")
     .filter(r => showDismissed || voteOf(r.e.id) !== -1)
     .filter(r => !hideLow || r.tier !== "low")
     .filter(r => typeOk(r.cat))
@@ -920,8 +924,8 @@ function jumpTo(id) {
   if (!row && view !== "season") { view = "season"; render(); row = document.getElementById("ev-" + id); }
   if (!row) {
     typeFilter.clear(); 
-    onlyStarred = false; hideLow = false; showDismissed = true;
-    for (const [elId, v] of [["only-starred", false], ["hide-low", false], ["show-dismissed", true]]) { const c = document.getElementById(elId); if (c) c.checked = v; }
+    onlyStarred = false; onlyRec = false; hideLow = false; showDismissed = true;
+    for (const [elId, v] of [["only-starred", false], ["only-rec", false], ["hide-low", false], ["show-dismissed", true]]) { const c = document.getElementById(elId); if (c) c.checked = v; }
     render(); row = document.getElementById("ev-" + id);
   }
   if (!row) return;
@@ -1224,6 +1228,7 @@ function renderExhibits([from, to]) {
   box.innerHTML = "";
   const list = EXHIBITS.filter(x => parse(x.to) >= from && parse(x.from) <= to)
     .filter(x => !onlyStarred || stars.has(x.id))
+    .filter(x => !onlyRec || RANK_TIER.has(x.id))
     .filter(x => showDismissed || voteOf(x.id) !== -1)
     .filter(x => (weights[x.cat || exCat] ?? 0) > 0 && typeOk(x.cat || exCat))
     .sort((a, b) => b.pick - a.pick || parse(a.to) - parse(b.to));
@@ -1400,6 +1405,7 @@ function renderFilterNote() {
   const box = document.getElementById("filter-note");
   const parts = [];
   if (typeFilter.size) parts.push([...typeFilter].map(k => CATS[k] || k).join(", ") + " only");
+  if (onlyRec) parts.push("recommended only");
   if (onlyStarred) parts.push("starred only");
   if (hideLow) parts.push("minor listings hidden");
   box.hidden = !parts.length;
@@ -1408,8 +1414,8 @@ function renderFilterNote() {
   const b = el("button", "linkish", "Show everything"); b.type = "button";
   b.addEventListener("click", () => {
     typeFilter.clear(); 
-    onlyStarred = false; store.set("onlyStarred", false); hideLow = false; store.set("hideLow", false);
-    for (const id of ["only-starred", "hide-low"]) { const c = document.getElementById(id); if (c) c.checked = false; }
+    onlyStarred = false; store.set("onlyStarred", false); onlyRec = false; hideLow = false; store.set("hideLow", false);
+    for (const id of ["only-starred", "only-rec", "hide-low"]) { const c = document.getElementById(id); if (c) c.checked = false; }
     render();
   });
   box.appendChild(b);
@@ -1445,6 +1451,8 @@ toTop.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   document.getElementById("tab-" + view)?.focus({ preventScroll: true });
 });
+const orc = document.getElementById("only-rec");
+orc.addEventListener("change", () => { onlyRec = orc.checked; render(); });
 const os = document.getElementById("only-starred"); os.checked = onlyStarred;
 os.addEventListener("change", () => { onlyStarred = os.checked; store.set("onlyStarred", onlyStarred); render(); });
 const sp = document.getElementById("show-past");
