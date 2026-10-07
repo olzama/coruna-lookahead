@@ -153,6 +153,7 @@ a.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .links .buy.secondary { background: var(--accent-soft); color: var(--ink); border: 1px solid var(--accent); }
 .links .buy:hover { filter: brightness(1.08); }
 .links .more { font-size: .78rem; }
+.links .ask, .ex-detail .ask { font-size: .78rem; color: var(--muted); }
 .fb { display: flex; flex-wrap: wrap; gap: .35rem .5rem; align-items: center; margin-top: .5rem; }
 .fb-btn { font: 500 .75rem/1 var(--font-body); border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .4rem .7rem; cursor: pointer; }
 .fb-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
@@ -698,6 +699,13 @@ function starBtn(id, title) {
 
 const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 function buyUrl(e, d) { return !e.buy ? null : typeof e.buy === "string" ? e.buy : e.buy[isoOf(d)] || null; }
+/* Opens ChatGPT in a new tab with a question about the listing. */
+function askLink(x, when) {
+  const city = (PROF && PROF.city) || "A Coruña";
+  const q = `Tell me about this event: "${x.t}"${x.who ? ` (${x.who})` : ""}, at ${x.v}, ${when}. My location: ${city}. What is it, who is involved, what do critics and audiences say, and is it worth going? Cite sources.`;
+  return `<a class="ask" href="https://chatgpt.com/?q=${encodeURIComponent(q)}" target="_blank" rel="noopener" title="Opens ChatGPT in a new tab with a question about this listing">Ask ChatGPT</a>`;
+}
+
 function linksFor(e, d) {
   const box = el("div", "links");
   const u = buyUrl(e, d);
@@ -707,6 +715,7 @@ function linksFor(e, d) {
   if (vt) box.insertAdjacentHTML("beforeend", `<a class="buy secondary" href="${vt}" target="_blank" rel="noopener" title="Exact ticket page not found yet; this is the venue's list on Ataquilla">Tickets: ${esc(e.v.replace("Teatro ", ""))} list</a>`);
   const lbl = !u && e.tix && !vt ? "Details and tickets" : "Details";
   box.insertAdjacentHTML("beforeend", `<a class="${!u && e.tix && !vt ? "buy secondary" : "more"}" href="${e.src}" target="_blank" rel="noopener">${lbl}</a>`);
+  box.insertAdjacentHTML("beforeend", askLink(e, (e.dates || []).map(x => x.d + (x.t ? " " + x.t : "")).join(", ")));
   return box;
 }
 
@@ -1073,7 +1082,7 @@ function renderExhibits([from, to]) {
     if (prof(x.id).fit) item.appendChild(el("div", "fit", `<b>For you</b> ${esc(prof(x.id).fit)}`));
     if (x.note) item.appendChild(el("div", "sub ex-detail", esc(x.note)));
     if (x.tbc) item.appendChild(el("div", "sub ex-detail", `<span class="tbc">To confirm: ${esc(x.tbc)}</span>`));
-    item.appendChild(el("div", "sub ex-detail", `<a href="${x.src}" target="_blank" rel="noopener">Exhibition page</a>`));
+    item.appendChild(el("div", "sub ex-detail", `<a href="${x.src}" target="_blank" rel="noopener">${x.cat === "cinema" ? "Film page" : "Exhibition page"}</a> · ${askLink(x, `${x.from || ""} to ${x.to || ""}`)}`));
     if (FB.enabled) { const f = fbControls(x.id, x.t, x.cat || exCat, x.v); f.classList.add("ex-detail"); item.appendChild(f); }
     if (voteOf(x.id) === -1) item.classList.add("dismissed");
     box.appendChild(item);
