@@ -736,7 +736,27 @@ function raw(cat, pick, id) {
   if (v === -1) return 0;
   return w * pick + (w && prof(id).fit ? FIT_BONUS : 0) + (w && v === 1 ? LIKE_BONUS : 0);
 }
-function tier(score) { return score >= 13 ? "must" : score >= 7 ? "rec" : score >= 3 ? "" : "low"; }
+/* Tiers are relative: among everything still ahead (events and exhibitions), the top MUST_SHARE by score are
+   "Don't miss" and the next REC_SHARE "Recommended", so the labels stay rare whatever the interest levels.
+   Ties are broken by the editorial rating, then by date. Scores below 3 are "low" (dimmed). */
+const MUST_SHARE = 0.05, REC_SHARE = 0.10;
+let RANK_TIER = new Map();
+function computeTiers() {
+  const pool = [];
+  for (const e of EVENTS) {
+    if (!(weights[e.cat] ?? 0)) continue;
+    const next = e.dates.map(([d]) => parse(d)).filter(d => d >= TODAY).sort((a, b) => a - b)[0];
+    if (next) pool.push({ id: e.id, s: raw(e.cat, e.pick, e.id), pick: e.pick, d: next });
+  }
+  for (const x of EXHIBITS) {
+    const xc = x.cat || exCat;
+    if ((weights[xc] ?? 0) && parse(x.to) >= TODAY) pool.push({ id: x.id, s: raw(xc, x.pick, x.id), pick: x.pick, d: parse(x.from) });
+  }
+  pool.sort((a, b) => b.s - a.s || b.pick - a.pick || a.d - b.d);
+  const nMust = Math.max(1, Math.round(pool.length * MUST_SHARE)), nRec = Math.round(pool.length * (MUST_SHARE + REC_SHARE));
+  RANK_TIER = new Map(pool.filter(p => p.s >= 3).slice(0, nRec).map((p, i) => [p.id, i < nMust ? "must" : "rec"]));
+}
+function tier(score, id) { return score < 3 ? "low" : RANK_TIER.get(id) || ""; }
 function urgency(daysAway) { return 1 + 0.8 * Math.exp(-daysAway / 6); }
 
 /* ---------- build ---------- */
@@ -747,7 +767,7 @@ function entries([from, to]) {
     const occ = e.dates.map(([d, t]) => ({ d: parse(d), t })).filter(o => o.d >= from && o.d <= to);
     if (!occ.length) continue;
     const s = raw(e.cat, e.pick, e.id);
-    out.push({ e, date: occ[0].d, time: occ[0].t, also: occ.slice(1), score: s, tier: tier(s), cat: e.cat });
+    out.push({ e, date: occ[0].d, time: occ[0].t, also: occ.slice(1), score: s, tier: tier(s, e.id), cat: e.cat });
   }
   for (const x of EXHIBITS) {
     const xc = x.cat || exCat;
@@ -755,7 +775,7 @@ function entries([from, to]) {
     const f = parse(x.from);
     if (f > from && f <= to) {
       const s = raw(xc, x.pick, x.id);
-      out.push({ e: { ...x, cat: xc, dates: [] }, date: f, time: "", also: [], score: s, tier: tier(s), cat: xc, opening: x.reopen ? "Reopens" : "Opens" });
+      out.push({ e: { ...x, cat: xc, dates: [] }, date: f, time: "", also: [], score: s, tier: tier(s, x.id), cat: xc, opening: x.reopen ? "Reopens" : "Opens" });
     }
   }
   return out
@@ -836,6 +856,8 @@ function renderEvent(r) {
   if (FB.enabled) body.appendChild(fbControls(e.id, e.t, r.cat, e.v));
   if (voteOf(e.id) === -1) row.classList.add("dismissed");
   row.appendChild(body);
+  const im = (r.tier === "must" || r.tier === "rec") && imgFor(e.id, e.v, false);
+  if (im) { row.classList.add("has-img"); row.insertAdjacentHTML("beforeend", imgTag(im, "thumb")); }
   const ctrls = el("div", "ctrls");
   ctrls.append(togBtn("ev:" + e.id, row, "Hide details", "Show details"), starBtn(e.id, e.t));
   row.appendChild(ctrls);
@@ -1012,10 +1034,12 @@ function alertEventId(a) {
   const byTitle = EVENTS.find(e => { const et = norm(e.t); return et && at && (at.includes(et) || et.includes(at)); });
   return byTitle ? byTitle.id : null;
 }
+/* Book early cards the viewer dismissed (this browser only; scan alerts are dismissed in the database). */
+const bookHidden = new Set(store.get("bookHidden", []));
 function renderBook() {
   const sec = document.getElementById("book-sec"), box = document.getElementById("book");
   box.innerHTML = "";
-  const items = entries(windowFor("season")).filter(r => DEMAND[r.e.id] && voteOf(r.e.id) !== -1 && r.date >= TODAY);
+  const items = entries(windowFor("season")).filter(r => DEMAND[r.e.id] && voteOf(r.e.id) !== -1 && r.date >= TODAY && !bookHidden.has(r.e.id));
   const alerts = FB.alerts
     .filter(a => !a.dismissed && (!a.date || parse(String(a.date).slice(0, 10)) >= TODAY))
     .sort((a, b) => String(b.foundAt || "").localeCompare(String(a.foundAt || "")));
@@ -1030,7 +1054,8 @@ function renderBook() {
     const act = el("span", "bk-act");
     if (/^https?:\/\//.test(a.url || "")) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${a.url}" target="_blank" rel="noopener">Tickets</a>`);
     const dis = el("button", "linkish bk-dis", "Dismiss"); dis.type = "button";
-    dis.addEventListener("click", async () => {
+    dis.addEventListener("click", async ev => {
+      ev.stopPropagation();
       const { id, ...body } = a;
       try { await FB.db.doc("alerts/" + id).set({ ...body, dismissed: true }); } catch (e) { dis.textContent = "Could not dismiss"; }
     });
@@ -1048,6 +1073,10 @@ function renderBook() {
     const act = el("span", "bk-act");
     if (u && !r.e.soldOut) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${u}" target="_blank" rel="noopener">Tickets</a>`);
     else if (r.e.src) act.insertAdjacentHTML("beforeend", `<a class="bk-buy alt" href="${r.e.src}" target="_blank" rel="noopener">Details</a>`);
+    const dis = el("button", "linkish bk-dis", "Dismiss"); dis.type = "button";
+    dis.title = "Hide this card; the listing stays";
+    dis.addEventListener("click", ev => { ev.stopPropagation(); bookHidden.add(r.e.id); store.set("bookHidden", [...bookHidden]); renderBook(); });
+    act.appendChild(dis);
     li.appendChild(act);
     box.appendChild(li);
   }
@@ -1143,7 +1172,7 @@ function renderExhibits([from, to]) {
     .sort((a, b) => b.pick - a.pick || parse(a.to) - parse(b.to));
   if (!list.length) { box.appendChild(el("p", "empty", typeFilter.size ? "No exhibitions for the selected types." : "No exhibitions match.")); return; }
   for (const x of list) {
-    const t = tier(raw(x.cat || exCat, x.pick, x.id));
+    const t = tier(raw(x.cat || exCat, x.pick, x.id), x.id);
     const f = parse(x.from), e = parse(x.to);
     const left = diff(TODAY, e), opensIn = diff(TODAY, f);
     let run = opensIn > 0 ? `${x.reopen ? "Reopens" : "Opens"} ${fmtShort(f)}` : `Since ${fmtShort(f)}`;
@@ -1330,6 +1359,7 @@ function renderFilterNote() {
 }
 
 function render() {
+  computeTiers();
   renderFilterNote();
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view));
   const win = windowFor(view);
