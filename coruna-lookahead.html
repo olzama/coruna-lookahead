@@ -836,8 +836,6 @@ function renderEvent(r) {
   if (FB.enabled) body.appendChild(fbControls(e.id, e.t, r.cat, e.v));
   if (voteOf(e.id) === -1) row.classList.add("dismissed");
   row.appendChild(body);
-  const im = imgFor(e.id, e.v, false);
-  if (im && r.tier !== "low") { row.classList.add("has-img"); row.insertAdjacentHTML("beforeend", imgTag(im, "thumb")); }
   const ctrls = el("div", "ctrls");
   ctrls.append(togBtn("ev:" + e.id, row, "Hide details", "Show details"), starBtn(e.id, e.t));
   row.appendChild(ctrls);
