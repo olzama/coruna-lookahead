@@ -17,9 +17,9 @@ PRINCIPLES
 - Evidence: every status and claim exactly as strong as its source. 'Sold out' only with an official source; 'well reviewed' only with reviews you found.
 - Generalize: the owner's feedback notes are examples of taste, not a list of the only things to watch.
 - Verify on official pages (organiser, venue, ticket seller). Aggregators are leads only.
-- Whole programmes, not highlights: for every venue with a regular programme (cinemas, theatres, halls, libraries), read its complete listing for this run's horizon on an official source (the venue's or city's agenda, its calendar feed, or the ticket seller's listing), rather than searching for notable titles. Cities often publish an official agenda or feed; read it in full before general searching. Weekly programmes (cinema cycles, library series) appear item by item only days ahead, so recheck them every run.
+- Whole programmes, not highlights: for every venue with a regular programme (cinemas, theatres, halls, libraries), read its complete listing for this run's horizon on an official source (the venue's or city's agenda, its calendar feed, or the ticket seller's listing), rather than searching for notable titles. Cities often publish an official agenda or feed; read it in full before general searching. Weekly programmes (cinema cycles, library series) appear item by item only days ahead, so recheck them every run. If a site blocks fetching, look for the same listing as a calendar feed (iCal, RSS) or fetch it with curl.
 - A venue may sell or list under several names (each screen, hall or room separately): search the ticket seller and agendas by the venue's name, not by one venue page.
-- Runs count: screenings or shows on several consecutive days are events (one listing with all dates); never filter an agenda down to single-day items.
+- Runs count: screenings or shows with fixed sessions on several days (a film Thursday to Saturday) are events, one listing with all dates; open-ended commercial cinema runs go to exhibits. Never filter an agenda down to single-day items.
 - Links: the event's own info page (src) and its own ticket page (buy); never a homepage or general agenda.
 
 PROCEDURE
