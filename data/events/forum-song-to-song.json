@@ -1,0 +1,40 @@
+{
+ "id": "forum-song-to-song",
+ "cat": "cinema",
+ "t": "Song to Song",
+ "who": "Terrence Malick · Malick cycle",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-10-15",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-16",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-17",
+   "t": "17:30"
+  },
+  {
+   "d": "2026-10-17",
+   "t": "20:00"
+  }
+ ],
+ "pick": 3,
+ "q": 5,
+ "rare": 0,
+ "people": [],
+ "works": [
+  "Terrence Malick"
+ ],
+ "series": "forum-malick",
+ "price": "€3 (€2 reduced)",
+ "src": "https://entradas.ataquilla.com/es/ventaentradas/cine/237-forum-metropolitano-sala-marilyn-monroe/x3amqwk6-sala-marilyn-monroe-terrence-malick3a-song-to-song-de-terrence-malick",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/237-forum-metropolitano-sala-marilyn-monroe/x3amqwk6-sala-marilyn-monroe-terrence-malick3a-song-to-song-de-terrence-malick",
+ "note": "",
+ "updatedAt": "2026-10-08T12:46:32Z",
+ "source": "refresh",
+ "tbc": "Thursday and Friday 20:00, Saturday 17:30 and 20:00 is the Fórum's usual pattern; the city page is not up yet."
+}

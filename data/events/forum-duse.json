@@ -1,0 +1,42 @@
+{
+ "id": "forum-duse",
+ "cat": "cinema",
+ "t": "Duse (Eleonora Duse, la divina)",
+ "who": "Pietro Marcello · Personajes cycle",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-10-22",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-23",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-24",
+   "t": "17:30"
+  },
+  {
+   "d": "2026-10-24",
+   "t": "20:00"
+  }
+ ],
+ "pick": 3,
+ "q": 6,
+ "rare": 0,
+ "people": [
+  "Eleonora Duse"
+ ],
+ "works": [
+  "Pietro Marcello"
+ ],
+ "series": "forum-personajes",
+ "price": "€3 (€2 reduced)",
+ "src": "https://entradas.ataquilla.com/es/ventaentradas/cine/238-forum-metropolitano-sala-fernando-rey/x3amqspf-sala-fernando-rey-personajes3a-duse-28eleonora-duse2c-la-divina29-de-pietro-marcello",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/238-forum-metropolitano-sala-fernando-rey/x3amqspf-sala-fernando-rey-personajes3a-duse-28eleonora-duse2c-la-divina29-de-pietro-marcello",
+ "note": "Biopic of the stage actress Eleonora Duse.",
+ "updatedAt": "2026-10-08T12:46:32Z",
+ "source": "refresh",
+ "tbc": "Thursday and Friday 20:00, Saturday 17:30 and 20:00 is the Fórum's usual pattern; the city page is not up yet."
+}

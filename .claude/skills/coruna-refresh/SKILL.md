@@ -29,7 +29,8 @@ The aim is recall. Fixed source lists and keyword lists miss things, so generate
   - the city agenda iCal (all categories; see project memory for the URL and IDs);
   - city news (coruna.gal novas), where some events appear only as announcements;
   - each venue's own agenda (Palacio de la Ópera, OSG, Amigos de la Ópera, Rosalía, Colón, Fórum, Filmoteca, Barrié, Afundación, Belas Artes, Fundación Luis Seoane, MUNCYT, Domus, Casa de las Ciencias, Aquarium, Kiosco Alfonso, Palacio Municipal, libraries, UDC, bookshops such as Moito Conto and Formatos);
-  - Ataquilla venue pages and its site search (browser method below), which also reveals events nobody else lists.
+  - Ataquilla, searched by each venue's name (browser method below), which also reveals events nobody else lists. One building often sells as several Ataquilla venues (the Fórum's cinema screens are separate from the Fórum itself), so a single venue page misses programmes.
+- **Read whole programmes, not highlights.** For each venue with a regular programme, list everything in the horizon from an official listing, then judge. Weekly programmes such as cinema cycles appear item by item only days ahead; the scans must recheck them. Multi-day runs (a film on Thursday to Saturday) are events, never filtered out as "not single-day".
 - **Follow leads**: every page found points to organisers, cycles and partner venues. Follow the promising ones one or two hops.
 - **Look slightly beyond the city** (Santiago, Ferrol, Betanzos) for things of unusual interest, and mark the travel.
 - **Look further ahead** (up to 6 months) for things that will sell out, and note their on-sale dates.
@@ -42,7 +43,7 @@ Aggregators (Quincemil, Planomato, Páxinas Galegas) are leads only: they have s
 
 ## 3. Get the most precise links
 
-Each listing needs its own info page (`src`) and, if ticketed, the exact ticket page (`buy`). Follow the precise-links rule in memory. For Ataquilla, use Claude in Chrome: open the venue page (`/es/ventaentradas/recintos/<id>-<venue>`) or the search (`/es/ventaentradas/resultados-busqueda?query=<title>`), then run `tools/ataquilla-venue-extract.js` to read each card's `product_uri`, `sold_out` and session dates. Other sellers (Ticketmaster, Entradas.com, El Corte Inglés, Eventbrite, the organiser's own form or email) get the same treatment: link the event's page, never a homepage. Registration by email: put the address in `reg`.
+Each listing needs its own info page (`src`) and, if ticketed, the exact ticket page (`buy`). Follow the precise-links rule in memory. For Ataquilla, use Claude in Chrome: open the search (`/es/ventaentradas/resultados-busqueda?query=<venue name or title>`; a venue page `/es/ventaentradas/recintos/<id>-<venue>` covers only that one sub-venue), then run `tools/ataquilla-venue-extract.js` to read each card's `product_uri`, `sold_out` and session dates. Other sellers (Ticketmaster, Entradas.com, El Corte Inglés, Eventbrite, the organiser's own form or email) get the same treatment: link the event's page, never a homepage. Registration by email: put the address in `reg`.
 
 ## 4. Judge and write
 

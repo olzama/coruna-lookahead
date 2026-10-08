@@ -1,0 +1,39 @@
+{
+ "id": "forum-knight-of-cups",
+ "cat": "cinema",
+ "t": "Knight of Cups",
+ "who": "Terrence Malick · Malick cycle",
+ "v": "Cines Fórum Metropolitano",
+ "dates": [
+  {
+   "d": "2026-10-08",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-09",
+   "t": "20:00"
+  },
+  {
+   "d": "2026-10-10",
+   "t": "17:30"
+  },
+  {
+   "d": "2026-10-10",
+   "t": "20:00"
+  }
+ ],
+ "pick": 3,
+ "q": 5,
+ "rare": 0,
+ "people": [],
+ "works": [
+  "Terrence Malick"
+ ],
+ "series": "forum-malick",
+ "price": "€3 (€2 reduced)",
+ "src": "https://www.coruna.gal/web/es/actualidad/agenda/agenda-eventos/evento/knight-of-cups-de-terrence-malick/suceso/1453928909594?argIdioma=es",
+ "buy": "https://entradas.ataquilla.com/es/ventaentradas/cine/237-forum-metropolitano-sala-marilyn-monroe/x3amqv9t-sala-marilyn-monroe-terrence-malick3a-knight-of-cups-de-terrence-malick",
+ "note": "USA 2015, 118 min.",
+ "updatedAt": "2026-10-08T12:46:32Z",
+ "source": "refresh"
+}
