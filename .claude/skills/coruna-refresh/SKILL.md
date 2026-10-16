@@ -5,7 +5,7 @@ description: Refresh the Coruña Lookahead digest — open-ended, profile-driven
 
 # Coruña Lookahead refresh
 
-The digest is `coruna-lookahead.html`, published at https://claude.ai/artifact/7GdwbbBHm11NWEP9tGReGn. Its listings live in the artifact's database: collections `events` and `exhibits` (readable by every viewer, writable by the owner), plus the owner-only `feedback` and `alerts`. The page renders whatever the database holds; the `EVENTS` / `EXHIBITS` arrays in the HTML are only a fallback snapshot for viewers without database access. `data/events/` and `data/exhibits/` hold a local copy of the documents. Three cloud routines also add and correct events and post alerts: a monthly 6-month deep scan, a weekly 30-day scan (Mondays) and a Thursday 10-day light scan. The owner reads the digest to decide how to spend evenings and weekends, so missing something they would have loved is the worst failure, and a wrong date or a link that makes them hunt is the second worst.
+The digest is `coruna-lookahead.html`, published at https://claude.ai/artifact/7GdwbbBHm11NWEP9tGReGn. Its listings live in the artifact's database: collections `events` and `exhibits` (readable by every viewer, writable by the owner), plus the owner-only `feedback`, `alerts` and `leads` (candidates not yet verified). The page renders whatever the database holds; the `EVENTS` / `EXHIBITS` arrays in the HTML are only a fallback snapshot for viewers without database access. `data/events/` and `data/exhibits/` hold a local copy of the documents. Three cloud routines also add and correct events and post alerts: a monthly 6-month deep scan, a weekly 30-day scan (Mondays) and a Thursday 10-day light scan. The owner reads the digest to decide how to spend evenings and weekends, so missing something they would have loved is the worst failure, and a wrong date or a link that makes them hunt is the second worst.
 
 ## Principles
 
@@ -35,7 +35,7 @@ The aim is recall. Fixed source lists and keyword lists miss things, so generate
 - **Look slightly beyond the city** (Santiago, Ferrol, Betanzos) for things of unusual interest, and mark the travel.
 - **Look further ahead** (up to 6 months) for things that will sell out, and note their on-sale dates.
 
-Keep a candidate list with the source of each.
+Keep a candidate list with the source of each. Start it from the `leads` collection and from listed events with a `tbc` or no `buy` link. A candidate that cannot be verified this time (no official page yet, date or venue unknown, programme not out) goes to `leads` (id, t, v, when, known, missing, check, leadSrc, foundAt, checkedAt, source) instead of being dropped; delete a lead once it becomes an event or is disproved or past. The scans recheck leads in their horizon.
 
 ## 2. Verify every candidate on an official page
 
