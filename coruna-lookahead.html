@@ -1086,11 +1086,16 @@ function makeJump(li, id) {
 }
 function alertEventId(a) {
   const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
-  const urls = e => [e.src, ...(e.buy ? (typeof e.buy === "string" ? [e.buy] : Object.values(e.buy)) : [])];
-  const byUrl = EVENTS.find(e => a.url && urls(e).includes(a.url));
-  if (byUrl) return byUrl.id;
+  const day = a.date ? String(a.date).slice(0, 10) : "";
+  const onDay = e => !day || e.dates.some(([d]) => d === day);
+  /* Scans name alerts "<event id>-<date>"; that is the surest match. */
+  const byId = EVENTS.find(e => String(a.id) === e.id || (String(a.id).startsWith(e.id + "-") && onDay(e)));
+  if (byId) return byId.id;
+  const urls = e => [e.src, ...(e.buy ? (typeof e.buy === "string" ? [e.buy] : Object.values(e.buy)) : [])].filter(Boolean);
+  const hits = a.url ? EVENTS.filter(e => urls(e).includes(a.url) && onDay(e)) : [];
+  if (hits.length === 1) return hits[0].id;
   const at = norm(a.title);
-  const byTitle = EVENTS.find(e => { const et = norm(e.t); return et && at && (at.includes(et) || et.includes(at)); });
+  const byTitle = EVENTS.find(e => { const et = norm(e.t); return onDay(e) && et && at && (at.includes(et) || et.includes(at)); });
   return byTitle ? byTitle.id : null;
 }
 /* Book early cards the viewer dismissed (this browser only; scan alerts are dismissed in the database). */
@@ -1098,43 +1103,59 @@ const bookHidden = new Set(store.get("bookHidden", []));
 function renderBook() {
   const sec = document.getElementById("book-sec"), box = document.getElementById("book");
   box.innerHTML = "";
-  const items = entries(windowFor("season")).filter(r => DEMAND[r.e.id] && voteOf(r.e.id) !== -1 && r.date >= TODAY && !bookHidden.has(r.e.id));
-  const alerts = FB.alerts
-    .filter(a => !a.dismissed && (!a.date || parse(String(a.date).slice(0, 10)) >= TODAY))
-    .sort((a, b) => String(b.foundAt || "").localeCompare(String(a.foundAt || "")));
-  sec.hidden = !items.length && !alerts.length;
-  const dateBlock = d => d ? `<span class="bk-date"><span class="bk-day">${d.getDate()}</span><span class="bk-mon">${d.toLocaleDateString("en-GB", { month: "short" })}</span></span>` : `<span class="bk-date"></span>`;
-  for (const a of alerts) {
-    const li = el("li", "bk-row");
-    const d = a.date ? parse(String(a.date).slice(0, 10)) : null;
-    const fresh = a.foundAt && (Date.now() - Date.parse(a.foundAt)) < 3 * DAY;
-    const onsale = a.onsaleDate ? ` · tickets from ${fmtShort(parse(String(a.onsaleDate).slice(0, 10)))}` : "";
-    li.innerHTML = dateBlock(d) + `<span class="bk-text"><span class="bk-status">${fresh ? '<b class="new">New</b>' : ""}${esc(ALERT_STATUS[a.status] || "Alert")}${onsale}</span><span class="bk-ttl">${esc(a.title || "")}</span><span class="bk-why">${esc([a.venue, a.reason].filter(Boolean).join(" · "))}</span></span>`;
-    const act = el("span", "bk-act");
-    if (/^https?:\/\//.test(a.url || "")) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${a.url}" target="_blank" rel="noopener">Tickets</a>`);
-    const dis = el("button", "linkish bk-dis", "Dismiss"); dis.type = "button";
-    dis.addEventListener("click", async ev => {
-      ev.stopPropagation();
-      const { id, ...body } = a;
-      try { await FB.db.doc("alerts/" + id).set({ ...body, dismissed: true }); } catch (e) { dis.textContent = "Could not dismiss"; }
-    });
-    act.appendChild(dis);
-    li.appendChild(act);
-    const evId = alertEventId(a);
-    if (evId) makeJump(li, evId);
-    box.appendChild(li);
+  /* One card per event, by its next date: a listing with a Book early note absorbs any scan alert about the same event. */
+  const cards = [];
+  for (const r of entries(windowFor("season"))) {
+    if (!DEMAND[r.e.id] || voteOf(r.e.id) === -1 || bookHidden.has(r.e.id)) continue;
+    const next = [r.date, ...r.also.map(o => o.d)].find(d => d >= TODAY);
+    if (next) cards.push({ date: next, r, evId: r.e.id });
   }
-  for (const r of items) {
+  const seen = new Set(cards.map(c => c.evId));
+  const alertsFor = new Map();
+  for (const a of FB.alerts) {
+    if (a.dismissed) continue;
+    const d = a.date ? parse(String(a.date).slice(0, 10)) : null;
+    if (d && d < TODAY) continue;
+    const evId = alertEventId(a);
+    if (evId && seen.has(evId)) { alertsFor.set(evId, a); continue; }
+    if (evId) seen.add(evId);
+    cards.push({ date: d, a, evId });
+  }
+  cards.sort((x, y) => (x.date ? x.date.getTime() : Infinity) - (y.date ? y.date.getTime() : Infinity));
+  sec.hidden = !cards.length;
+  const dateBlock = d => d ? `<span class="bk-date"><span class="bk-day">${d.getDate()}</span><span class="bk-mon">${d.toLocaleDateString("en-GB", { month: "short" })}</span></span>` : `<span class="bk-date"></span>`;
+  const dismissAlert = (a, btn) => async ev => {
+    ev.stopPropagation();
+    const { id, ...body } = a;
+    try { await FB.db.doc("alerts/" + id).set({ ...body, dismissed: true }); } catch (e) { btn.textContent = "Could not dismiss"; }
+  };
+  for (const c of cards) {
     const li = el("li", "bk-row");
-    li.innerHTML = dateBlock(r.date) + `<span class="bk-text"><span class="bk-status">${rel(diff(TODAY, r.date))}</span><a class="bk-ttl" href="#ev-${r.e.id}">${(r.opening ? r.opening + ": " : "") + esc(r.e.t)}</a><span class="bk-why">${esc(DEMAND[r.e.id])}</span></span>`;
-    makeJump(li, r.e.id);
-    const u = buyUrl(r.e, r.date);
     const act = el("span", "bk-act");
-    if (u && !r.e.soldOut) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${u}" target="_blank" rel="noopener">Tickets</a>`);
-    else if (r.e.src) act.insertAdjacentHTML("beforeend", `<a class="bk-buy alt" href="${r.e.src}" target="_blank" rel="noopener">Details</a>`);
     const dis = el("button", "linkish bk-dis", "Dismiss"); dis.type = "button";
-    dis.title = "Hide this card; the listing stays";
-    dis.addEventListener("click", ev => { ev.stopPropagation(); bookHidden.add(r.e.id); store.set("bookHidden", [...bookHidden]); renderBook(); });
+    if (c.a) {
+      const a = c.a;
+      const fresh = a.foundAt && (Date.now() - Date.parse(a.foundAt)) < 3 * DAY;
+      const onsale = a.onsaleDate ? ` · tickets from ${fmtShort(parse(String(a.onsaleDate).slice(0, 10)))}` : "";
+      li.innerHTML = dateBlock(c.date) + `<span class="bk-text"><span class="bk-status">${fresh ? '<b class="new">New</b>' : ""}${esc(ALERT_STATUS[a.status] || "Alert")}${onsale}</span><span class="bk-ttl">${esc(a.title || "")}</span><span class="bk-why">${esc([a.venue, a.reason].filter(Boolean).join(" · "))}</span></span>`;
+      if (/^https?:\/\//.test(a.url || "")) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${a.url}" target="_blank" rel="noopener">Tickets</a>`);
+      dis.addEventListener("click", dismissAlert(a, dis));
+      if (c.evId) makeJump(li, c.evId);
+    } else {
+      const r = c.r, a = alertsFor.get(r.e.id);
+      const status = (a ? esc(ALERT_STATUS[a.status] || "Alert") + " · " : "") + rel(diff(TODAY, c.date));
+      li.innerHTML = dateBlock(c.date) + `<span class="bk-text"><span class="bk-status">${status}</span><a class="bk-ttl" href="#ev-${r.e.id}">${(r.opening ? r.opening + ": " : "") + esc(r.e.t)}</a><span class="bk-why">${esc(DEMAND[r.e.id])}</span></span>`;
+      makeJump(li, r.e.id);
+      const u = buyUrl(r.e, c.date);
+      if (u && !r.e.soldOut) act.insertAdjacentHTML("beforeend", `<a class="bk-buy" href="${u}" target="_blank" rel="noopener">Tickets</a>`);
+      else if (r.e.src) act.insertAdjacentHTML("beforeend", `<a class="bk-buy alt" href="${r.e.src}" target="_blank" rel="noopener">Details</a>`);
+      dis.title = "Hide this card; the listing stays";
+      dis.addEventListener("click", ev => {
+        ev.stopPropagation(); bookHidden.add(r.e.id); store.set("bookHidden", [...bookHidden]);
+        if (a) dismissAlert(a, dis)(ev);
+        renderBook();
+      });
+    }
     act.appendChild(dis);
     li.appendChild(act);
     box.appendChild(li);
