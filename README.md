@@ -17,6 +17,7 @@ Live page: https://claude.ai/artifact/7GdwbbBHm11NWEP9tGReGn
   - weekly: the next 30 days;
   - light: the next 10 days (short-notice events).
   The scans take the owner's taste from the profile and work out where to look each time; there is no fixed source list.
+- **Pictures** (routine, prompt in `routines/pictures.md`) runs after the scans and gives each upcoming listing without a picture a freely licensed one from Wikimedia Commons.
 - **Manual refresh**: the Claude Code skill in `.claude/skills/coruna-refresh/` does a full, deeper pass, including reading ticket sites through a browser.
 - `tools/ataquilla-venue-extract.js` lists the exact event pages on an Ataquilla venue page (run in a browser).
 - `tools/pick-images.py` chooses freely licensed pictures from Wikimedia Commons (via Wikidata, categories and search) for a plan of per-listing subjects, keeping a mix of kinds and few repeats; `tools/apply-images.py` adds them to the page and the database.
@@ -27,7 +28,7 @@ You need a paid Claude plan that includes Claude Code cloud sessions (Pro or abo
 
 1. Publish your own copy of `coruna-lookahead.html` as a Claude artifact (or copy the live page from claude.ai).
 2. Open it and fill in **Your interests**: your city, what you care about and how much, and what you don't want.
-3. Create the three routines at claude.ai/code/routines using the prompts in `routines/`, with your artifact's link in place of `ARTIFACT_URL`, in a cloud environment with full network access.
+3. Create the four routines at claude.ai/code/routines using the prompts in `routines/`, with your artifact's link in place of `ARTIFACT_URL`, in a cloud environment with full network access.
 4. Optionally clear the starting listings; the first scans will fill them for your city.
 
 ## Licence

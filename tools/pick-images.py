@@ -34,7 +34,7 @@ import argparse, hashlib, json, os, re, shutil, subprocess, sys, time, unicodeda
 
 COMMONS = "https://commons.wikimedia.org/w/api.php"
 WIKIDATA = "https://www.wikidata.org/w/api.php"
-UA = "CorunaLookahead/1.0 (https://github.com/olzama/coruna-lookahead; olga.zamaraeva@gmail.com)"
+UA = "CorunaLookahead/1.0 (https://github.com/olzama/coruna-lookahead)"
 OK_LICENSE = re.compile(r"^(public domain|pd\b.*|cc0( 1\.0)?|cc by(-sa)?( \d(\.\d)?)?( [a-z]{2,})?)$", re.I)
 SKIP_TITLE = re.compile(r"logo|\bmap\b|mapa|stamp|sello|coat of arms|escudo|flag|bandera|diagram|chart|signature|firma|icon|\.pdf|\.svg|\.tif", re.I)
 EXACT = {"file": 1.0, "wikidata": 0.9, "category": 0.8, "search": 0.5}
