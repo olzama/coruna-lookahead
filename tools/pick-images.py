@@ -25,8 +25,9 @@ only public domain, CC0, CC BY and CC BY-SA raster images of usable size pass.
 Assignment, in date order, scores candidates by exactness and subject order,
 penalises reuse (capped by --max-reuse) and the same kind of picture as the
 previous two listings. Winners are saved at 640 px in img/ (as .jpg, or .png when served so and sips is unavailable); the result JSON
-holds key, kind, method, credit and source page per listing, and lists the
-items with no picture under "none".
+holds key, kind, method, credit and source page per listing, lists the
+items with no picture under "none", and under "errors" the items whose lookup
+or download failed (rate limits, server errors), to retry later.
 
 Usage: pick-images.py plan.json result.json [--img-dir img] [--max-reuse 2]
 """
@@ -40,16 +41,25 @@ SKIP_TITLE = re.compile(r"logo|\bmap\b|mapa|stamp|sello|coat of arms|escudo|flag
 EXACT = {"file": 1.0, "wikidata": 0.9, "category": 0.8, "search": 0.5}
 
 
+THROTTLED = False  # set when a request still fails after retries (rate limit, server error)
+
+
 def get(api, params, tries=4):
+    """GET a MediaWiki API; on 429/5xx back off and retry, and flag THROTTLED if it never succeeds."""
+    global THROTTLED
     url = api + "?" + urllib.parse.urlencode({**params, "format": "json"})
     for i in range(tries):
-        r = subprocess.run(["curl", "-s", "-m", "30", "-A", UA, url], capture_output=True, text=True)
-        try:
-            out = json.loads(r.stdout)
-            time.sleep(1)
-            return out
-        except ValueError:
-            time.sleep(8 * (i + 1))
+        r = subprocess.run(["curl", "-s", "-m", "30", "-A", UA, "-w", "\n%{http_code}", url], capture_output=True, text=True)
+        body, _, code = r.stdout.rpartition("\n")
+        if code == "200":
+            try:
+                out = json.loads(body)
+                time.sleep(1)
+                return out
+            except ValueError:
+                pass
+        time.sleep(15 * (i + 1))
+    THROTTLED = True
     return {}
 
 
@@ -129,9 +139,11 @@ def main():
     ap.add_argument("--img-dir", default="img"); ap.add_argument("--max-reuse", type=int, default=2)
     a = ap.parse_args()
     plan = sorted(json.load(open(a.plan)), key=lambda x: x.get("date", ""))
-    used, kinds, picks, none = {}, [], [], []
+    global THROTTLED
+    used, kinds, picks, none, errors = {}, [], [], [], []
     for item in plan:
         best = None
+        THROTTLED = False
         for si, s in enumerate(item["subjects"]):
             for rank, (c, how) in enumerate(lookup(s)):
                 n = used.get(c["title"], 0)
@@ -140,7 +152,9 @@ def main():
                 score -= 0.25 * sum(k == s["kind"] for k in kinds[-2:])
                 if not best or score > best[0]: best = (score, c, s, how)
         if not best:
-            none.append(item["id"]); print(f"none    {item['id']}", file=sys.stderr); continue
+            # A failed lookup is not evidence that no picture exists: report it separately.
+            (errors if THROTTLED else none).append(item["id"])
+            print(f"{'error' if THROTTLED else 'none':7} {item['id']}", file=sys.stderr); continue
         _, c, s, how = best
         key = "c-" + hashlib.sha1(c["title"].encode()).hexdigest()[:10]
         # Commons serves a 640 px thumbnail; on macOS sips recompresses it, elsewhere it is kept as served.
@@ -154,17 +168,20 @@ def main():
                 os.remove(raw)
             else:
                 os.replace(raw, dest)
-                r = subprocess.CompletedProcess([], 0 if os.path.getsize(dest) > 1000 else 1)
+                head = open(dest, "rb").read(8)
+                ok = head.startswith(b"\xff\xd8") or head.startswith(b"\x89PNG")
+                r = subprocess.CompletedProcess([], 0 if ok and os.path.getsize(dest) > 1000 else 1)
             if r.returncode:
-                none.append(item["id"]); print(f"fail    {item['id']} {c['title']}", file=sys.stderr); continue
+                if os.path.exists(dest): os.remove(dest)
+                errors.append(item["id"]); print(f"fail    {item['id']} {c['title']}", file=sys.stderr); continue
         used[c["title"]] = used.get(c["title"], 0) + 1
         kinds.append(s["kind"])
-        picks.append({"id": item["id"], "col": item["col"], "img": key, "src": dest, "kind": s["kind"], "how": how,
+        picks.append({"id": item["id"], "col": item["col"], "img": key, "src": f"img/{key}.{ext}", "file_path": dest, "kind": s["kind"], "how": how,
                       "subject": s["q"], "file": c["title"], "page": c["page"], "alt": c["desc"] or s["q"],
                       "credit": f"{c['title'].rsplit('.', 1)[0]}, by {c['artist']}, {c['lic']} (Wikimedia Commons)."})
         print(f"{s['kind']:7} {how:8} {item['id']:22} <- {c['title'][:60]} ({c['lic']})", file=sys.stderr)
-        json.dump({"picks": picks, "none": none}, open(a.result, "w"), ensure_ascii=False, indent=1)
-    json.dump({"picks": picks, "none": none}, open(a.result, "w"), ensure_ascii=False, indent=1)
+        json.dump({"picks": picks, "none": none, "errors": errors}, open(a.result, "w"), ensure_ascii=False, indent=1)
+    json.dump({"picks": picks, "none": none, "errors": errors}, open(a.result, "w"), ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
