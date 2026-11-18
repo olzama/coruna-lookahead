@@ -180,8 +180,9 @@ def main():
                       "subject": s["q"], "file": c["title"], "page": c["page"], "alt": c["desc"] or s["q"],
                       "credit": f"{c['title'].rsplit('.', 1)[0]}, by {c['artist']}, {c['lic']} (Wikimedia Commons)."})
         print(f"{s['kind']:7} {how:8} {item['id']:22} <- {c['title'][:60]} ({c['lic']})", file=sys.stderr)
-        json.dump({"picks": picks, "none": none, "errors": errors}, open(a.result, "w"), ensure_ascii=False, indent=1)
-    json.dump({"picks": picks, "none": none, "errors": errors}, open(a.result, "w"), ensure_ascii=False, indent=1)
+    # Written once, at the end, via a temporary file: the result file exists only when the run is complete.
+    json.dump({"picks": picks, "none": none, "errors": errors}, open(a.result + ".tmp", "w"), ensure_ascii=False, indent=1)
+    os.replace(a.result + ".tmp", a.result)
 
 
 if __name__ == "__main__":
