@@ -17,7 +17,7 @@ The digest is `coruna-lookahead.html`, published at https://claude.ai/artifact/7
 
 Read the owner's profile from the database (`ArtifactData` `get`, collection `settings`, doc `profile`: city, about, interests with levels, dislikes); it is the authority on taste and place, and interest keys are the event categories. Also read the project memory: the user profile, the precise-links rule, the project notes and loose ends. Then read the page's feedback with `ArtifactData` `list` on collection `feedback` and on `alerts`. Treat votes and notes as the strongest signal of taste: a "Not for me" with a reason describes a whole class of events to avoid, and a "More like this" describes a class to seek.
 
-Write yourself a short brief before searching: what this person cares about now, what they used to love, what they dislike, their work, their languages, where they come from, their dog, and what kinds of events they would not think to look for but would value. Facts in the profile are evidence, not a checklist.
+Write yourself a short brief before searching: what this person cares about now, what they used to love, what they dislike, their work, their languages, where they come from, their dog, and what kinds of events they would not think to look for but would value. Facts in the profile are evidence, not a checklist: every name in it (composers, artists, authors, directors, venues, companies) is an example of broad tastes, never a limit or a keyword to match. Judge each candidate on its merits (seriousness, quality, rarity, how much they would regret missing it), whether or not it resembles an example.
 
 ## 1. Discover broadly, not from a list
 
