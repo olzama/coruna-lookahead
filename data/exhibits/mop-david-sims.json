@@ -1,0 +1,22 @@
+{
+  "id": "mop-david-sims",
+  "cat": "art",
+  "t": "David Sims: The Hamster Becomes The Problem",
+  "who": "Photography exhibition · Fundación MOP (Marta Ortega Pérez)",
+  "v": "Fundación MOP, Muelle de Batería (port)",
+  "from": "2026-11-21",
+  "to": "2027-05-01",
+  "pick": 4,
+  "q": 7,
+  "rare": 1,
+  "fitw": 1,
+  "people": ["David Sims"],
+  "works": ["David Sims"],
+  "series": "mop-foundation",
+  "price": "free (guided visits €5)",
+  "src": "https://themopfoundation.org/es/exhibitions/david-sims",
+  "note": "The British photographer's archive, from fashion and advertising to personal work. Free entry without booking; guided visits in Spanish and Galician are booked on the foundation's site.",
+  "fit": "The Fundación MOP's photography shows at the port, which you follow.",
+  "updatedAt": "2026-11-20T00:00:00Z",
+  "source": "refresh"
+}
